@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Download, Calendar, MapPin, GraduationCap } from 'lucide-react';
+import { Download, Calendar, MapPin, GraduationCap, Briefcase } from 'lucide-react';
 
 export const Resume = () => {
   const education = [
@@ -15,6 +15,17 @@ export const Resume = () => {
       school: "Indian Institute of Technology",
       period: "2014 - 2018", 
       location: "Mumbai, India"
+    }
+  ];
+
+  // This would be populated from the dashboard in a real application
+  const experience = [
+    {
+      title: "Software Engineer Intern",
+      company: "Tech Corp",
+      period: "2024 - Present",
+      location: "Remote",
+      description: "Working on React applications and backend services"
     }
   ];
 
@@ -62,35 +73,67 @@ export const Resume = () => {
             </div>
           </div>
 
-          {/* Certifications */}
+          {/* Experience & Certifications */}
           <div>
-            <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
-              <GraduationCap size={24} className="text-blue-400" />
-              Certifications
-            </h3>
-            
-            <div className="space-y-3">
-              {[
-                "AWS Certified Solutions Architect",
-                "Google Cloud Professional Developer", 
-                "MongoDB Certified Developer",
-                "Kubernetes Application Developer"
-              ].map((cert, index) => (
-                <div
-                  key={index}
-                  className="bg-white/5 backdrop-blur-lg rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-colors duration-300"
-                >
-                  <span className="text-gray-300">{cert}</span>
+            {/* Experience Section */}
+            <div className="mb-12">
+              <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
+                <Briefcase size={24} className="text-blue-400" />
+                Experience
+              </h3>
+              
+              {experience.length > 0 ? (
+                <div className="space-y-8">
+                  {experience.map((exp, index) => (
+                    <div key={index} className="relative pl-8 border-l-2 border-blue-400/30">
+                      <div className="absolute -left-2 top-0 w-4 h-4 bg-blue-400 rounded-full"></div>
+                      <div className="bg-white/5 backdrop-blur-lg rounded-lg p-6 border border-white/10">
+                        <h4 className="text-xl font-semibold text-blue-400 mb-2">{exp.title}</h4>
+                        <h5 className="text-lg font-medium mb-3">{exp.company}</h5>
+                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-gray-400 mb-3">
+                          <span className="flex items-center gap-1">
+                            <Calendar size={16} />
+                            {exp.period}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin size={16} />
+                            {exp.location}
+                          </span>
+                        </div>
+                        <p className="text-gray-300">{exp.description}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="bg-white/5 backdrop-blur-lg rounded-lg p-8 border border-white/10 text-center">
+                  <p className="text-gray-400 mb-4">Ready to start my professional journey!</p>
+                  <p className="text-sm text-gray-500">Experience will be added as I progress in my career.</p>
+                </div>
+              )}
             </div>
 
-            {/* Future Experience Section */}
-            <div className="mt-12">
-              <h4 className="text-xl font-semibold mb-6 text-blue-400">Experience</h4>
-              <div className="bg-white/5 backdrop-blur-lg rounded-lg p-8 border border-white/10 text-center">
-                <p className="text-gray-400 mb-4">Ready to start my professional journey!</p>
-                <p className="text-sm text-gray-500">Experience will be added as I progress in my career.</p>
+            {/* Certifications */}
+            <div>
+              <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
+                <GraduationCap size={24} className="text-green-400" />
+                Certifications
+              </h3>
+              
+              <div className="space-y-3">
+                {[
+                  "AWS Certified Solutions Architect",
+                  "Google Cloud Professional Developer", 
+                  "MongoDB Certified Developer",
+                  "Kubernetes Application Developer"
+                ].map((cert, index) => (
+                  <div
+                    key={index}
+                    className="bg-white/5 backdrop-blur-lg rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-colors duration-300"
+                  >
+                    <span className="text-gray-300">{cert}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
