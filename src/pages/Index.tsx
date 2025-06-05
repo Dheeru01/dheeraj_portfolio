@@ -8,6 +8,7 @@ import { Gallery } from '../components/Gallery';
 import { Resume } from '../components/Resume';
 import { Contact } from '../components/Contact';
 import { Navigation } from '../components/Navigation';
+import { Dashboard } from '../components/Dashboard';
 
 const Index = () => {
   return (
@@ -20,6 +21,7 @@ const Index = () => {
       <Gallery />
       <Resume />
       <Contact />
+      <Dashboard />
     </div>
   );
 };
