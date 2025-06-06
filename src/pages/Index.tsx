@@ -10,6 +10,7 @@ import { Contact } from '../components/Contact';
 import { Navigation } from '../components/Navigation';
 import { Dashboard } from '../components/Dashboard';
 import { AIChatbot } from '../components/AIChatbot';
+import { ExperimentalChatbot } from '../components/ExperimentalChatbot';
 
 const Index = () => {
   return (
@@ -24,6 +25,7 @@ const Index = () => {
       <Contact />
       <Dashboard />
       <AIChatbot />
+      <ExperimentalChatbot />
     </div>
   );
 };
