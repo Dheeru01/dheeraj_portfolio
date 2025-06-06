@@ -1,141 +1,18 @@
 
-import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, Send, X } from 'lucide-react';
-
-interface Message {
-  id: number;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-}
+import React, { useState } from 'react';
+import { MessageCircle, X } from 'lucide-react';
+import { useChat } from '../hooks/useChat';
 
 export const ExperimentalChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      content: "Hi! I'm Dheeraj's AI assistant. I can read the live content from his portfolio and answer any questions about his skills, projects, education, and experience. What would you like to know?",
-      isUser: false,
-      timestamp: new Date()
-    }
-  ]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const GEMINI_API_KEY = "AIzaSyDTIvkJ_EK_IlqFlkf-JpYe2E4ihydeBuA";
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  // Function to get live portfolio content from the DOM
-  const getLivePortfolioContent = () => {
-    const sections = document.querySelectorAll("section, .section, .projects-container, .skills, .resume, .certifications, [id*='hero'], [id*='about'], [id*='skills'], [id*='projects'], [id*='resume'], [id*='contact']");
-    let content = "";
-
-    sections.forEach(sec => {
-      const element = sec as HTMLElement;
-      const text = element.innerText?.trim();
-      if (text && text.length > 40) {
-        content += "\n\n" + text;
-      }
-    });
-
-    // Also try to get content from common class names
-    const additionalSelectors = ['.hero', '.about', '.skills-section', '.projects-section', '.resume-section', '.contact-section'];
-    additionalSelectors.forEach(selector => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(element => {
-        const htmlElement = element as HTMLElement;
-        const text = htmlElement.innerText?.trim();
-        if (text && text.length > 40) {
-          content += "\n\n" + text;
-        }
-      });
-    });
-
-    return content.slice(0, 8000); // limit to 8k tokens
-  };
-
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
-
-    const userMessage: Message = {
-      id: Date.now(),
-      content: inputMessage,
-      isUser: true,
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    const currentInput = inputMessage;
-    setInputMessage('');
-    setIsLoading(true);
-
-    try {
-      // Get live content from the portfolio
-      const liveContent = getLivePortfolioContent();
-      
-      const prompt = `You are Dheeraj Kanukuntla's AI assistant. The following is the live text content from his portfolio website. Use it to answer questions factually about his skills, projects, education, and achievements. Avoid hallucinating. Be helpful and sound like Dheeraj's digital assistant.
-
-Website Content:
-${liveContent}
-
-User Question: ${currentInput}
-
-Please answer the user's question based on this live content from the portfolio.`;
-
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: prompt
-            }]
-          }],
-          generationConfig: {
-            temperature: 0.5,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 1024,
-          }
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to get AI response');
-      }
-
-      const data = await response.json();
-      const aiResponse: Message = {
-        id: Date.now() + 1,
-        content: data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.",
-        isUser: false,
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, aiResponse]);
-    } catch (error) {
-      console.error('Error:', error);
-      const errorMessage: Message = {
-        id: Date.now() + 1,
-        content: "Sorry, I'm having trouble connecting right now. Please try again later!",
-        isUser: false,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    messages,
+    inputMessage,
+    setInputMessage,
+    isLoading,
+    messagesEndRef,
+    handleSendMessage
+  } = useChat();
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
