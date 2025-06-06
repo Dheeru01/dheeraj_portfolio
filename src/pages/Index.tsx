@@ -9,6 +9,7 @@ import { Resume } from '../components/Resume';
 import { Contact } from '../components/Contact';
 import { Navigation } from '../components/Navigation';
 import { Dashboard } from '../components/Dashboard';
+import { AIChatbot } from '../components/AIChatbot';
 
 const Index = () => {
   return (
@@ -22,6 +23,7 @@ const Index = () => {
       <Resume />
       <Contact />
       <Dashboard />
+      <AIChatbot />
     </div>
   );
 };

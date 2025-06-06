@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Edit3, Save, Plus, Trash2, Eye, EyeOff, Lock, User, Mail } from 'lucide-react';
+import { Edit3, Save, Plus, Trash2, Eye, EyeOff, Lock, User, Mail, Upload, Image } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -44,7 +43,8 @@ export const Dashboard = () => {
   const [content, setContent] = useState({
     aboutText: 'Passionate software developer with expertise in modern web technologies...',
     contactEmail: 'dheeraj@example.com',
-    contactPhone: '+1234567890'
+    contactPhone: '+1234567890',
+    profileImage: ''
   });
 
   const [newProject, setNewProject] = useState({ title: '', description: '', tech: '' });
@@ -104,6 +104,21 @@ export const Dashboard = () => {
       title: "Logged out",
       description: "You have been logged out successfully",
     });
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setContent({...content, profileImage: reader.result as string});
+        toast({
+          title: "Success",
+          description: "Profile image updated successfully!",
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const addProject = () => {
@@ -322,7 +337,7 @@ export const Dashboard = () => {
 
         {/* Tabs */}
         <div className="flex space-x-4 mb-6 overflow-x-auto">
-          {['projects', 'skills', 'experience', 'content'].map((tab) => (
+          {['projects', 'skills', 'experience', 'profile', 'content'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -336,6 +351,48 @@ export const Dashboard = () => {
             </button>
           ))}
         </div>
+
+        {/* Profile Tab */}
+        {activeTab === 'profile' && (
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold text-white">Profile Management</h3>
+            
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <h4 className="text-lg font-medium text-white mb-4">Profile Picture</h4>
+              <div className="flex items-center gap-6">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden">
+                  {content.profileImage ? (
+                    <img 
+                      src={content.profileImage} 
+                      alt="Profile" 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <User size={40} className="text-white" />
+                  )}
+                </div>
+                <div className="flex-1">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="profileImageInput"
+                  />
+                  <Label htmlFor="profileImageInput" className="cursor-pointer">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition-colors">
+                      <Upload size={16} />
+                      Upload New Photo
+                    </div>
+                  </Label>
+                  <p className="text-gray-400 text-sm mt-2">
+                    Recommended: Square image, at least 200x200px
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Projects Tab */}
         {activeTab === 'projects' && (
@@ -544,19 +601,6 @@ export const Dashboard = () => {
                     className="bg-gray-700 text-white border-gray-600"
                   />
                 </div>
-              </div>
-
-              <div className="bg-gray-800 p-4 rounded-lg">
-                <h4 className="text-lg font-medium text-white mb-4">Other Content Areas</h4>
-                <div className="space-y-2 text-gray-300">
-                  <p>• Resume file upload</p>
-                  <p>• Gallery images management</p>
-                  <p>• Certifications editing</p>
-                  <p>• Social media links</p>
-                </div>
-                <p className="text-sm text-gray-500 mt-4">
-                  These features can be implemented as needed for full content management.
-                </p>
               </div>
             </div>
           </div>
