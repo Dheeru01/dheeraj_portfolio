@@ -23,7 +23,7 @@ export const ExperimentalChatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const OPENAI_API_KEY = "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";
+  const GEMINI_API_KEY = "AIzaSyDTIvkJ_EK_IlqFlkf-JpYe2E4ihydeBuA";
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -81,33 +81,32 @@ export const ExperimentalChatbot = () => {
       // Get live content from the portfolio
       const liveContent = getLivePortfolioContent();
       
-      const context = `The following is the live text content from Dheeraj Kanukuntla's portfolio website. Use it to answer questions factually about his skills, projects, education, and achievements. Avoid hallucinating. Be helpful and sound like Dheeraj's digital assistant.
+      const prompt = `You are Dheeraj Kanukuntla's AI assistant. The following is the live text content from his portfolio website. Use it to answer questions factually about his skills, projects, education, and achievements. Avoid hallucinating. Be helpful and sound like Dheeraj's digital assistant.
 
 Website Content:
 ${liveContent}
 
+User Question: ${currentInput}
+
 Please answer the user's question based on this live content from the portfolio.`;
 
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${OPENAI_API_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'system',
-              content: context
-            },
-            {
-              role: 'user',
-              content: currentInput
-            }
-          ],
-          max_tokens: 500,
-          temperature: 0.5,
+          contents: [{
+            parts: [{
+              text: prompt
+            }]
+          }],
+          generationConfig: {
+            temperature: 0.5,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 1024,
+          }
         }),
       });
 
@@ -118,7 +117,7 @@ Please answer the user's question based on this live content from the portfolio.
       const data = await response.json();
       const aiResponse: Message = {
         id: Date.now() + 1,
-        content: data.choices?.[0]?.message?.content || "Sorry, I couldn't generate a response.",
+        content: data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.",
         isUser: false,
         timestamp: new Date()
       };
