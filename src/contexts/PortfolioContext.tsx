@@ -6,6 +6,10 @@ interface Project {
   title: string;
   description: string;
   tech: string;
+  image?: string;
+  github?: string;
+  live?: string;
+  featured?: boolean;
 }
 
 interface Skill {
@@ -22,17 +26,26 @@ interface Experience {
   description: string;
 }
 
+interface GalleryItem {
+  id: number;
+  src: string;
+  title: string;
+  category: string;
+}
+
 interface Content {
   aboutText: string;
   contactEmail: string;
   contactPhone: string;
   profileImage: string;
+  technologies: string[];
 }
 
 interface PortfolioData {
   projects: Project[];
   skills: Skill[];
   experiences: Experience[];
+  gallery: GalleryItem[];
   content: Content;
 }
 
@@ -41,14 +54,33 @@ interface PortfolioContextType {
   updateProjects: (projects: Project[]) => void;
   updateSkills: (skills: Skill[]) => void;
   updateExperiences: (experiences: Experience[]) => void;
+  updateGallery: (gallery: GalleryItem[]) => void;
   updateContent: (content: Content) => void;
   saveChanges: () => void;
 }
 
 const defaultData: PortfolioData = {
   projects: [
-    { id: 1, title: 'AI-Powered Task Manager', description: 'A smart task management app', tech: 'React, Node.js, AI' },
-    { id: 2, title: 'E-commerce Platform', description: 'Full-stack shopping platform', tech: 'Next.js, MongoDB' }
+    { 
+      id: 1, 
+      title: 'AI-Powered Task Manager', 
+      description: 'A smart task management app with ML-based priority suggestions', 
+      tech: 'React, Node.js, AI',
+      image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&h=300&fit=crop',
+      github: 'https://github.com',
+      live: 'https://example.com',
+      featured: true
+    },
+    { 
+      id: 2, 
+      title: 'E-commerce Platform', 
+      description: 'Full-stack shopping platform with payment integration', 
+      tech: 'Next.js, MongoDB',
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=300&fit=crop',
+      github: 'https://github.com',
+      live: 'https://example.com',
+      featured: true
+    }
   ],
   skills: [
     { id: 1, name: 'JavaScript', level: 90 },
@@ -58,11 +90,26 @@ const defaultData: PortfolioData = {
   experiences: [
     { id: 1, title: 'Software Engineer Intern', company: 'Tech Corp', period: '2024 - Present', description: 'Working on React applications and backend services' }
   ],
+  gallery: [
+    {
+      id: 1,
+      src: "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400&h=300&fit=crop",
+      title: "Tech Conference 2023",
+      category: "Events"
+    },
+    {
+      id: 2,
+      src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=300&fit=crop",
+      title: "Team Building Workshop",
+      category: "Team"
+    }
+  ],
   content: {
     aboutText: 'Passionate software developer with expertise in modern web technologies...',
     contactEmail: 'kanukuntladheeraj@gmail.com',
     contactPhone: '+1 (555) 123-4567',
-    profileImage: ''
+    profileImage: '',
+    technologies: ['React', 'Vue.js', 'Angular', 'Node.js', 'Express', 'Python', 'Django', 'Flask', 'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'AWS', 'Docker', 'Kubernetes', 'Git']
   }
 };
 
@@ -91,12 +138,15 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
     setPortfolioData(prev => ({ ...prev, experiences }));
   };
 
+  const updateGallery = (gallery: GalleryItem[]) => {
+    setPortfolioData(prev => ({ ...prev, gallery }));
+  };
+
   const updateContent = (content: Content) => {
     setPortfolioData(prev => ({ ...prev, content }));
   };
 
   const saveChanges = () => {
-    // In a real app, this would save to a backend
     localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
     console.log('Portfolio data saved:', portfolioData);
   };
@@ -107,6 +157,7 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
       updateProjects,
       updateSkills,
       updateExperiences,
+      updateGallery,
       updateContent,
       saveChanges
     }}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Edit3, Save, Plus, Trash2, Eye, EyeOff, Lock, User, Mail, Upload, Image } from 'lucide-react';
+import { Edit3, Save, Plus, Trash2, Eye, EyeOff, Lock, User, Mail, Upload, Image, Link, Star } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -20,7 +20,7 @@ export const Dashboard = () => {
   const [resetEmail, setResetEmail] = useState('');
   
   const { toast } = useToast();
-  const { portfolioData, updateProjects, updateSkills, updateExperiences, updateContent, saveChanges } = usePortfolio();
+  const { portfolioData, updateProjects, updateSkills, updateExperiences, updateGallery, updateContent, saveChanges } = usePortfolio();
 
   // Hardcoded credentials
   const ADMIN_USERNAME = 'Kanukuntla Dheeraj';
@@ -30,17 +30,21 @@ export const Dashboard = () => {
   const [projects, setProjects] = useState(portfolioData.projects);
   const [skills, setSkills] = useState(portfolioData.skills);
   const [experiences, setExperiences] = useState(portfolioData.experiences);
+  const [gallery, setGallery] = useState(portfolioData.gallery);
   const [content, setContent] = useState(portfolioData.content);
 
-  const [newProject, setNewProject] = useState({ title: '', description: '', tech: '' });
+  const [newProject, setNewProject] = useState({ title: '', description: '', tech: '', image: '', github: '', live: '', featured: false });
   const [newSkill, setNewSkill] = useState({ name: '', level: 50 });
   const [newExperience, setNewExperience] = useState({ title: '', company: '', period: '', description: '' });
+  const [newGalleryItem, setNewGalleryItem] = useState({ src: '', title: '', category: '' });
+  const [newTechnology, setNewTechnology] = useState('');
 
   // Update local state when portfolio data changes
   useEffect(() => {
     setProjects(portfolioData.projects);
     setSkills(portfolioData.skills);
     setExperiences(portfolioData.experiences);
+    setGallery(portfolioData.gallery);
     setContent(portfolioData.content);
   }, [portfolioData]);
 
@@ -65,6 +69,7 @@ export const Dashboard = () => {
     updateProjects(projects);
     updateSkills(skills);
     updateExperiences(experiences);
+    updateGallery(gallery);
     updateContent(content);
     saveChanges();
     toast({
@@ -127,9 +132,9 @@ export const Dashboard = () => {
   };
 
   const addProject = () => {
-    if (newProject.title) {
+    if (newProject.title && newProject.description) {
       setProjects([...projects, { ...newProject, id: Date.now() }]);
-      setNewProject({ title: '', description: '', tech: '' });
+      setNewProject({ title: '', description: '', tech: '', image: '', github: '', live: '', featured: false });
       toast({ title: "Success", description: "Project added successfully!" });
     }
   };
@@ -150,6 +155,22 @@ export const Dashboard = () => {
     }
   };
 
+  const addGalleryItem = () => {
+    if (newGalleryItem.src && newGalleryItem.title) {
+      setGallery([...gallery, { ...newGalleryItem, id: Date.now() }]);
+      setNewGalleryItem({ src: '', title: '', category: '' });
+      toast({ title: "Success", description: "Gallery item added successfully!" });
+    }
+  };
+
+  const addTechnology = () => {
+    if (newTechnology && !content.technologies.includes(newTechnology)) {
+      setContent({...content, technologies: [...content.technologies, newTechnology]});
+      setNewTechnology('');
+      toast({ title: "Success", description: "Technology added successfully!" });
+    }
+  };
+
   const removeProject = (id: number) => {
     setProjects(projects.filter(p => p.id !== id));
     toast({ title: "Deleted", description: "Project removed successfully!" });
@@ -163,6 +184,20 @@ export const Dashboard = () => {
   const removeExperience = (id: number) => {
     setExperiences(experiences.filter(e => e.id !== id));
     toast({ title: "Deleted", description: "Experience removed successfully!" });
+  };
+
+  const removeGalleryItem = (id: number) => {
+    setGallery(gallery.filter(g => g.id !== id));
+    toast({ title: "Deleted", description: "Gallery item removed successfully!" });
+  };
+
+  const removeTechnology = (tech: string) => {
+    setContent({...content, technologies: content.technologies.filter(t => t !== tech)});
+    toast({ title: "Deleted", description: "Technology removed successfully!" });
+  };
+
+  const toggleProjectFeatured = (id: number) => {
+    setProjects(projects.map(p => p.id === id ? {...p, featured: !p.featured} : p));
   };
 
   if (!isVisible) {
@@ -342,7 +377,7 @@ export const Dashboard = () => {
 
         {/* Tabs */}
         <div className="flex space-x-4 mb-6 overflow-x-auto">
-          {['projects', 'skills', 'experience', 'profile', 'content'].map((tab) => (
+          {['projects', 'skills', 'experience', 'gallery', 'technologies', 'profile', 'content'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -356,6 +391,191 @@ export const Dashboard = () => {
             </button>
           ))}
         </div>
+
+        {/* Projects Tab */}
+        {activeTab === 'projects' && (
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold text-black">Manage Projects</h3>
+            
+            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+              <h4 className="text-lg font-medium text-black mb-4">Add New Project</h4>
+              <div className="space-y-3">
+                <Input
+                  placeholder="Project Title"
+                  value={newProject.title}
+                  onChange={(e) => setNewProject({...newProject, title: e.target.value})}
+                  className="bg-white text-black border-gray-300"
+                />
+                <textarea
+                  placeholder="Project Description"
+                  value={newProject.description}
+                  onChange={(e) => setNewProject({...newProject, description: e.target.value})}
+                  className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
+                  rows={3}
+                />
+                <Input
+                  placeholder="Technologies Used (comma separated)"
+                  value={newProject.tech}
+                  onChange={(e) => setNewProject({...newProject, tech: e.target.value})}
+                  className="bg-white text-black border-gray-300"
+                />
+                <Input
+                  placeholder="Project Image URL"
+                  value={newProject.image}
+                  onChange={(e) => setNewProject({...newProject, image: e.target.value})}
+                  className="bg-white text-black border-gray-300"
+                />
+                <Input
+                  placeholder="GitHub URL"
+                  value={newProject.github}
+                  onChange={(e) => setNewProject({...newProject, github: e.target.value})}
+                  className="bg-white text-black border-gray-300"
+                />
+                <Input
+                  placeholder="Live Demo URL"
+                  value={newProject.live}
+                  onChange={(e) => setNewProject({...newProject, live: e.target.value})}
+                  className="bg-white text-black border-gray-300"
+                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="featured"
+                    checked={newProject.featured}
+                    onChange={(e) => setNewProject({...newProject, featured: e.target.checked})}
+                    className="rounded"
+                  />
+                  <Label htmlFor="featured" className="text-black">Featured Project</Label>
+                </div>
+                <Button onClick={addProject} className="bg-black hover:bg-gray-800 text-white">
+                  <Plus size={16} className="mr-2" />
+                  Add Project
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {projects.map((project) => (
+                <div key={project.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h5 className="text-black font-medium">{project.title}</h5>
+                      {project.featured && <Star size={16} className="text-yellow-500 fill-current" />}
+                      <button
+                        onClick={() => toggleProjectFeatured(project.id)}
+                        className="text-gray-600 hover:text-black"
+                      >
+                        <Star size={16} className={project.featured ? "text-yellow-500 fill-current" : ""} />
+                      </button>
+                    </div>
+                    <p className="text-gray-600 mb-1">{project.description}</p>
+                    <p className="text-gray-800 text-sm mb-1">Tech: {project.tech}</p>
+                    {project.github && <p className="text-gray-600 text-sm">GitHub: {project.github}</p>}
+                    {project.live && <p className="text-gray-600 text-sm">Live: {project.live}</p>}
+                  </div>
+                  <button
+                    onClick={() => removeProject(project.id)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Gallery Tab */}
+        {activeTab === 'gallery' && (
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold text-black">Manage Gallery</h3>
+            
+            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+              <h4 className="text-lg font-medium text-black mb-4">Add New Gallery Item</h4>
+              <div className="space-y-3">
+                <Input
+                  placeholder="Image URL"
+                  value={newGalleryItem.src}
+                  onChange={(e) => setNewGalleryItem({...newGalleryItem, src: e.target.value})}
+                  className="bg-white text-black border-gray-300"
+                />
+                <Input
+                  placeholder="Image Title"
+                  value={newGalleryItem.title}
+                  onChange={(e) => setNewGalleryItem({...newGalleryItem, title: e.target.value})}
+                  className="bg-white text-black border-gray-300"
+                />
+                <Input
+                  placeholder="Category"
+                  value={newGalleryItem.category}
+                  onChange={(e) => setNewGalleryItem({...newGalleryItem, category: e.target.value})}
+                  className="bg-white text-black border-gray-300"
+                />
+                <Button onClick={addGalleryItem} className="bg-black hover:bg-gray-800 text-white">
+                  <Plus size={16} className="mr-2" />
+                  Add Gallery Item
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {gallery.map((item) => (
+                <div key={item.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
+                  <div className="flex gap-4">
+                    <img src={item.src} alt={item.title} className="w-16 h-16 object-cover rounded" />
+                    <div>
+                      <h5 className="text-black font-medium">{item.title}</h5>
+                      <p className="text-gray-600">{item.category}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeGalleryItem(item.id)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Technologies Tab */}
+        {activeTab === 'technologies' && (
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold text-black">Manage Technologies</h3>
+            
+            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+              <h4 className="text-lg font-medium text-black mb-4">Add New Technology</h4>
+              <div className="flex gap-3">
+                <Input
+                  placeholder="Technology Name"
+                  value={newTechnology}
+                  onChange={(e) => setNewTechnology(e.target.value)}
+                  className="bg-white text-black border-gray-300"
+                />
+                <Button onClick={addTechnology} className="bg-black hover:bg-gray-800 text-white">
+                  <Plus size={16} className="mr-2" />
+                  Add
+                </Button>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {content.technologies.map((tech) => (
+                <div key={tech} className="flex items-center gap-2 bg-gray-200 px-3 py-1 rounded-full">
+                  <span className="text-black">{tech}</span>
+                  <button
+                    onClick={() => removeTechnology(tech)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Profile Tab */}
         {activeTab === 'profile' && (
@@ -395,60 +615,6 @@ export const Dashboard = () => {
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Projects Tab */}
-        {activeTab === 'projects' && (
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-black">Manage Projects</h3>
-            
-            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-              <h4 className="text-lg font-medium text-black mb-4">Add New Project</h4>
-              <div className="space-y-3">
-                <Input
-                  placeholder="Project Title"
-                  value={newProject.title}
-                  onChange={(e) => setNewProject({...newProject, title: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <textarea
-                  placeholder="Project Description"
-                  value={newProject.description}
-                  onChange={(e) => setNewProject({...newProject, description: e.target.value})}
-                  className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
-                  rows={3}
-                />
-                <Input
-                  placeholder="Technologies Used"
-                  value={newProject.tech}
-                  onChange={(e) => setNewProject({...newProject, tech: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Button onClick={addProject} className="bg-black hover:bg-gray-800 text-white">
-                  <Plus size={16} className="mr-2" />
-                  Add Project
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {projects.map((project) => (
-                <div key={project.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
-                  <div>
-                    <h5 className="text-black font-medium">{project.title}</h5>
-                    <p className="text-gray-600">{project.description}</p>
-                    <p className="text-gray-800 text-sm">{project.tech}</p>
-                  </div>
-                  <button
-                    onClick={() => removeProject(project.id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              ))}
             </div>
           </div>
         )}

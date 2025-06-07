@@ -1,147 +1,143 @@
 
 import React from 'react';
 import { ExternalLink, Github, Play } from 'lucide-react';
+import { usePortfolio } from '../contexts/PortfolioContext';
 
 export const Projects = () => {
-  const projects = [
-    {
-      title: "AI-Powered Task Manager",
-      description: "Smart task management app with ML-based priority suggestions and automated scheduling",
-      image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&h=300&fit=crop",
-      tags: ["React", "Python", "TensorFlow", "MongoDB"],
-      github: "#",
-      live: "#",
-      featured: true
-    },
-    {
-      title: "Real-time Collaboration Platform",
-      description: "Full-stack web application enabling real-time document collaboration and video conferencing",
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=300&fit=crop",
-      tags: ["Vue.js", "Node.js", "Socket.io", "WebRTC"],
-      github: "#",
-      live: "#",
-      featured: true
-    },
-    {
-      title: "Blockchain Voting System",
-      description: "Secure and transparent voting platform built on Ethereum blockchain",
-      image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=500&h=300&fit=crop",
-      tags: ["Solidity", "React", "Web3.js", "IPFS"],
-      github: "#",
-      live: "#",
-      featured: false
-    },
-    {
-      title: "Smart IoT Dashboard",
-      description: "Comprehensive dashboard for monitoring and controlling IoT devices with predictive analytics",
-      image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=500&h=300&fit=crop",
-      tags: ["Angular", "Python", "AWS IoT", "InfluxDB"],
-      github: "#",
-      live: "#",
-      featured: false
-    }
-  ];
+  const { portfolioData } = usePortfolio();
+  const { projects } = portfolioData;
+
+  const featuredProjects = projects.filter(p => p.featured);
+  const otherProjects = projects.filter(p => !p.featured);
 
   return (
-    <section id="projects" className="py-20 px-6">
+    <section id="projects" className="py-20 px-6 bg-white">
       <div className="container mx-auto max-w-7xl">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-          Featured <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Projects</span>
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-black animate-fade-in">
+          Featured <span className="bg-gradient-to-r from-gray-600 to-black bg-clip-text text-transparent">Projects</span>
         </h2>
         
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
-          {projects.filter(p => p.featured).map((project, index) => (
-            <div
-              key={project.title}
-              className="group bg-white/5 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105"
-            >
-              <div className="relative overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                <div className="absolute top-4 right-4 flex gap-2">
-                  <a
-                    href={project.github}
-                    className="p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors duration-300"
-                  >
-                    <Github size={20} />
-                  </a>
-                  <a
-                    href={project.live}
-                    className="p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors duration-300"
-                  >
-                    <ExternalLink size={20} />
-                  </a>
+        {featuredProjects.length > 0 && (
+          <div className="grid lg:grid-cols-2 gap-8 mb-12">
+            {featuredProjects.map((project, index) => (
+              <div
+                key={project.id}
+                className="group bg-gray-50 hover:bg-gray-100 rounded-2xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-500 hover:scale-105 hover:shadow-2xl animate-fade-in"
+                style={{ animationDelay: `${index * 0.2}s` }}
+              >
+                <div className="relative overflow-hidden">
+                  <img
+                    src={project.image || "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&h=300&fit=crop"}
+                    alt={project.title}
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 bg-black/70 rounded-full hover:bg-black transition-colors duration-300 hover:scale-110 transform"
+                      >
+                        <Github size={20} className="text-white" />
+                      </a>
+                    )}
+                    {project.live && (
+                      <a
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 bg-black/70 rounded-full hover:bg-black transition-colors duration-300 hover:scale-110 transform"
+                      >
+                        <ExternalLink size={20} className="text-white" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold mb-3 text-black group-hover:text-gray-800 transition-colors duration-300">{project.title}</h3>
+                  <p className="text-gray-700 mb-4 leading-relaxed">{project.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech.split(', ').map((tech, techIndex) => (
+                      <span
+                        key={techIndex}
+                        className="px-3 py-1 bg-gradient-to-r from-gray-200 to-gray-300 text-black rounded-full text-sm border border-gray-300 hover:from-gray-300 hover:to-gray-400 transition-all duration-300"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-              
-              <div className="p-6">
-                <h3 className="text-2xl font-bold mb-3">{project.title}</h3>
-                <p className="text-gray-300 mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full text-sm border border-white/20"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
         
-        <div className="grid md:grid-cols-2 gap-6">
-          {projects.filter(p => !p.featured).map((project, index) => (
-            <div
-              key={project.title}
-              className="group bg-white/5 backdrop-blur-lg rounded-xl overflow-hidden border border-white/10 hover:bg-white/10 transition-all duration-300"
-            >
-              <div className="relative overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-              </div>
-              
-              <div className="p-4">
-                <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                <p className="text-gray-300 text-sm mb-3">{project.description}</p>
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded text-xs border border-white/20"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+        {otherProjects.length > 0 && (
+          <div className="grid md:grid-cols-2 gap-6">
+            {otherProjects.map((project, index) => (
+              <div
+                key={project.id}
+                className="group bg-gray-50 hover:bg-gray-100 rounded-xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:shadow-lg animate-fade-in"
+                style={{ animationDelay: `${(featuredProjects.length + index) * 0.1}s` }}
+              >
+                <div className="relative overflow-hidden">
+                  <img
+                    src={project.image || "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&h=300&fit=crop"}
+                    alt={project.title}
+                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
-                <div className="flex gap-2">
-                  <a
-                    href={project.github}
-                    className="flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300"
-                  >
-                    <Github size={16} /> Code
-                  </a>
-                  <a
-                    href={project.live}
-                    className="flex items-center gap-1 text-sm text-purple-400 hover:text-purple-300"
-                  >
-                    <ExternalLink size={16} /> Live
-                  </a>
+                
+                <div className="p-4">
+                  <h3 className="text-xl font-bold mb-2 text-black">{project.title}</h3>
+                  <p className="text-gray-700 text-sm mb-3 leading-relaxed">{project.description}</p>
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {project.tech.split(', ').map((tech, techIndex) => (
+                      <span
+                        key={techIndex}
+                        className="px-2 py-1 bg-gradient-to-r from-gray-200 to-gray-300 text-black rounded text-xs border border-gray-300"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-sm text-gray-700 hover:text-black transition-colors duration-300"
+                      >
+                        <Github size={16} /> Code
+                      </a>
+                    )}
+                    {project.live && (
+                      <a
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-sm text-gray-700 hover:text-black transition-colors duration-300"
+                      >
+                        <ExternalLink size={16} /> Live
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
+        {projects.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-lg">No projects added yet. Use the dashboard to add your projects!</p>
+          </div>
+        )}
       </div>
     </section>
   );
