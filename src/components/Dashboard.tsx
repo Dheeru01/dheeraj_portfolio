@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Edit3, Save, Plus, Trash2, Eye, EyeOff, Lock, User, Mail, Upload, Image } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { usePortfolio } from '../contexts/PortfolioContext';
 
 export const Dashboard = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -19,37 +20,29 @@ export const Dashboard = () => {
   const [resetEmail, setResetEmail] = useState('');
   
   const { toast } = useToast();
+  const { portfolioData, updateProjects, updateSkills, updateExperiences, updateContent, saveChanges } = usePortfolio();
 
   // Hardcoded credentials
   const ADMIN_USERNAME = 'Kanukuntla Dheeraj';
   const ADMIN_PASSWORD = 'Dheeraj@2004';
 
-  // State for managing content
-  const [projects, setProjects] = useState([
-    { id: 1, title: 'AI-Powered Task Manager', description: 'A smart task management app', tech: 'React, Node.js, AI' },
-    { id: 2, title: 'E-commerce Platform', description: 'Full-stack shopping platform', tech: 'Next.js, MongoDB' }
-  ]);
-
-  const [skills, setSkills] = useState([
-    { id: 1, name: 'JavaScript', level: 90 },
-    { id: 2, name: 'React', level: 85 },
-    { id: 3, name: 'Python', level: 80 }
-  ]);
-
-  const [experiences, setExperiences] = useState([
-    { id: 1, title: 'Software Engineer Intern', company: 'Tech Corp', period: '2024 - Present', description: 'Working on React applications and backend services' }
-  ]);
-
-  const [content, setContent] = useState({
-    aboutText: 'Passionate software developer with expertise in modern web technologies...',
-    contactEmail: 'dheeraj@example.com',
-    contactPhone: '+1234567890',
-    profileImage: ''
-  });
+  // Local state for editing
+  const [projects, setProjects] = useState(portfolioData.projects);
+  const [skills, setSkills] = useState(portfolioData.skills);
+  const [experiences, setExperiences] = useState(portfolioData.experiences);
+  const [content, setContent] = useState(portfolioData.content);
 
   const [newProject, setNewProject] = useState({ title: '', description: '', tech: '' });
   const [newSkill, setNewSkill] = useState({ name: '', level: 50 });
   const [newExperience, setNewExperience] = useState({ title: '', company: '', period: '', description: '' });
+
+  // Update local state when portfolio data changes
+  useEffect(() => {
+    setProjects(portfolioData.projects);
+    setSkills(portfolioData.skills);
+    setExperiences(portfolioData.experiences);
+    setContent(portfolioData.content);
+  }, [portfolioData]);
 
   const handleLogin = () => {
     if (loginData.username === ADMIN_USERNAME && loginData.password === ADMIN_PASSWORD) {
@@ -66,6 +59,18 @@ export const Dashboard = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleSaveChanges = () => {
+    updateProjects(projects);
+    updateSkills(skills);
+    updateExperiences(experiences);
+    updateContent(content);
+    saveChanges();
+    toast({
+      title: "Success",
+      description: "All changes have been saved successfully!",
+    });
   };
 
   const handleForgotPassword = () => {
@@ -164,7 +169,7 @@ export const Dashboard = () => {
     return (
       <button
         onClick={() => setIsVisible(true)}
-        className="fixed bottom-4 right-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 z-50"
+        className="fixed bottom-4 right-4 bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-colors duration-300 z-50"
       >
         <Edit3 size={20} />
       </button>
@@ -175,15 +180,15 @@ export const Dashboard = () => {
   if (!isLoggedIn) {
     return (
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div className="bg-slate-900 rounded-lg p-8 w-full max-w-md">
+        <div className="bg-white rounded-lg p-8 w-full max-w-md border border-gray-300">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-black flex items-center gap-2">
               <Lock size={24} />
               Admin Login
             </h2>
             <button
               onClick={() => setIsVisible(false)}
-              className="text-gray-400 hover:text-white"
+              className="text-gray-600 hover:text-black"
             >
               <EyeOff size={24} />
             </button>
@@ -192,32 +197,32 @@ export const Dashboard = () => {
           {!showForgotPassword && !showChangePassword ? (
             <div className="space-y-6">
               <div>
-                <Label htmlFor="username" className="text-white">Username</Label>
+                <Label htmlFor="username" className="text-black">Username</Label>
                 <Input
                   id="username"
                   type="text"
                   value={loginData.username}
                   onChange={(e) => setLoginData({...loginData, username: e.target.value})}
-                  className="mt-2 bg-gray-700 text-white border-gray-600"
+                  className="mt-2 bg-gray-100 text-black border-gray-300"
                   placeholder="Enter username"
                 />
               </div>
               
               <div>
-                <Label htmlFor="password" className="text-white">Password</Label>
+                <Label htmlFor="password" className="text-black">Password</Label>
                 <Input
                   id="password"
                   type="password"
                   value={loginData.password}
                   onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-                  className="mt-2 bg-gray-700 text-white border-gray-600"
+                  className="mt-2 bg-gray-100 text-black border-gray-300"
                   placeholder="Enter password"
                 />
               </div>
 
               <Button 
                 onClick={handleLogin}
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-black hover:bg-gray-800 text-white"
               >
                 Login
               </Button>
@@ -225,14 +230,14 @@ export const Dashboard = () => {
               <div className="text-center space-y-2">
                 <button
                   onClick={() => setShowForgotPassword(true)}
-                  className="text-blue-400 hover:text-blue-300 text-sm"
+                  className="text-gray-600 hover:text-black text-sm"
                 >
                   Forgot Password?
                 </button>
                 <br />
                 <button
                   onClick={() => setShowChangePassword(true)}
-                  className="text-purple-400 hover:text-purple-300 text-sm"
+                  className="text-gray-600 hover:text-black text-sm"
                 >
                   Change Password
                 </button>
@@ -241,13 +246,13 @@ export const Dashboard = () => {
           ) : showForgotPassword ? (
             <div className="space-y-6">
               <div>
-                <Label htmlFor="resetEmail" className="text-white">Email Address</Label>
+                <Label htmlFor="resetEmail" className="text-black">Email Address</Label>
                 <Input
                   id="resetEmail"
                   type="email"
                   value={resetEmail}
                   onChange={(e) => setResetEmail(e.target.value)}
-                  className="mt-2 bg-gray-700 text-white border-gray-600"
+                  className="mt-2 bg-gray-100 text-black border-gray-300"
                   placeholder="Enter your email"
                 />
               </div>
@@ -255,7 +260,7 @@ export const Dashboard = () => {
               <div className="flex gap-3">
                 <Button 
                   onClick={handleForgotPassword}
-                  className="flex-1 bg-green-600 hover:bg-green-700"
+                  className="flex-1 bg-black hover:bg-gray-800 text-white"
                 >
                   Send Reset Link
                 </Button>
@@ -271,25 +276,25 @@ export const Dashboard = () => {
           ) : (
             <div className="space-y-6">
               <div>
-                <Label htmlFor="newPassword" className="text-white">New Password</Label>
+                <Label htmlFor="newPassword" className="text-black">New Password</Label>
                 <Input
                   id="newPassword"
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="mt-2 bg-gray-700 text-white border-gray-600"
+                  className="mt-2 bg-gray-100 text-black border-gray-300"
                   placeholder="Enter new password"
                 />
               </div>
 
               <div>
-                <Label htmlFor="confirmPassword" className="text-white">Confirm Password</Label>
+                <Label htmlFor="confirmPassword" className="text-black">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="mt-2 bg-gray-700 text-white border-gray-600"
+                  className="mt-2 bg-gray-100 text-black border-gray-300"
                   placeholder="Confirm new password"
                 />
               </div>
@@ -297,7 +302,7 @@ export const Dashboard = () => {
               <div className="flex gap-3">
                 <Button 
                   onClick={handleChangePassword}
-                  className="flex-1 bg-green-600 hover:bg-green-700"
+                  className="flex-1 bg-black hover:bg-gray-800 text-white"
                 >
                   Change Password
                 </Button>
@@ -319,16 +324,16 @@ export const Dashboard = () => {
   // Main dashboard
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-slate-900 rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-300">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-white">Portfolio Dashboard</h2>
+          <h2 className="text-2xl font-bold text-black">Portfolio Dashboard</h2>
           <div className="flex gap-2">
             <Button onClick={handleLogout} variant="outline" size="sm">
               Logout
             </Button>
             <button
               onClick={() => setIsVisible(false)}
-              className="text-gray-400 hover:text-white"
+              className="text-gray-600 hover:text-black"
             >
               <EyeOff size={24} />
             </button>
@@ -343,8 +348,8 @@ export const Dashboard = () => {
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-lg capitalize transition-colors whitespace-nowrap ${
                 activeTab === tab
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-black text-white'
+                  : 'bg-gray-200 text-black hover:bg-gray-300'
               }`}
             >
               {tab}
@@ -355,12 +360,12 @@ export const Dashboard = () => {
         {/* Profile Tab */}
         {activeTab === 'profile' && (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-white">Profile Management</h3>
+            <h3 className="text-xl font-semibold text-black">Profile Management</h3>
             
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h4 className="text-lg font-medium text-white mb-4">Profile Picture</h4>
+            <div className="bg-gray-100 p-6 rounded-lg border border-gray-300">
+              <h4 className="text-lg font-medium text-black mb-4">Profile Picture</h4>
               <div className="flex items-center gap-6">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden">
+                <div className="w-24 h-24 rounded-full bg-black flex items-center justify-center overflow-hidden">
                   {content.profileImage ? (
                     <img 
                       src={content.profileImage} 
@@ -380,12 +385,12 @@ export const Dashboard = () => {
                     id="profileImageInput"
                   />
                   <Label htmlFor="profileImageInput" className="cursor-pointer">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition-colors">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white transition-colors">
                       <Upload size={16} />
                       Upload New Photo
                     </div>
                   </Label>
-                  <p className="text-gray-400 text-sm mt-2">
+                  <p className="text-gray-600 text-sm mt-2">
                     Recommended: Square image, at least 200x200px
                   </p>
                 </div>
@@ -397,31 +402,31 @@ export const Dashboard = () => {
         {/* Projects Tab */}
         {activeTab === 'projects' && (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-white">Manage Projects</h3>
+            <h3 className="text-xl font-semibold text-black">Manage Projects</h3>
             
-            <div className="bg-gray-800 p-4 rounded-lg">
-              <h4 className="text-lg font-medium text-white mb-4">Add New Project</h4>
+            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+              <h4 className="text-lg font-medium text-black mb-4">Add New Project</h4>
               <div className="space-y-3">
                 <Input
                   placeholder="Project Title"
                   value={newProject.title}
                   onChange={(e) => setNewProject({...newProject, title: e.target.value})}
-                  className="bg-gray-700 text-white border-gray-600"
+                  className="bg-white text-black border-gray-300"
                 />
                 <textarea
                   placeholder="Project Description"
                   value={newProject.description}
                   onChange={(e) => setNewProject({...newProject, description: e.target.value})}
-                  className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600"
+                  className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
                   rows={3}
                 />
                 <Input
                   placeholder="Technologies Used"
                   value={newProject.tech}
                   onChange={(e) => setNewProject({...newProject, tech: e.target.value})}
-                  className="bg-gray-700 text-white border-gray-600"
+                  className="bg-white text-black border-gray-300"
                 />
-                <Button onClick={addProject} className="bg-green-600 hover:bg-green-700">
+                <Button onClick={addProject} className="bg-black hover:bg-gray-800 text-white">
                   <Plus size={16} className="mr-2" />
                   Add Project
                 </Button>
@@ -430,15 +435,15 @@ export const Dashboard = () => {
 
             <div className="space-y-3">
               {projects.map((project) => (
-                <div key={project.id} className="bg-gray-800 p-4 rounded-lg flex justify-between items-start">
+                <div key={project.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
                   <div>
-                    <h5 className="text-white font-medium">{project.title}</h5>
-                    <p className="text-gray-400">{project.description}</p>
-                    <p className="text-blue-400 text-sm">{project.tech}</p>
+                    <h5 className="text-black font-medium">{project.title}</h5>
+                    <p className="text-gray-600">{project.description}</p>
+                    <p className="text-gray-800 text-sm">{project.tech}</p>
                   </div>
                   <button
                     onClick={() => removeProject(project.id)}
-                    className="text-red-400 hover:text-red-300"
+                    className="text-red-600 hover:text-red-800"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -451,19 +456,19 @@ export const Dashboard = () => {
         {/* Skills Tab */}
         {activeTab === 'skills' && (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-white">Manage Skills</h3>
+            <h3 className="text-xl font-semibold text-black">Manage Skills</h3>
             
-            <div className="bg-gray-800 p-4 rounded-lg">
-              <h4 className="text-lg font-medium text-white mb-4">Add New Skill</h4>
+            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+              <h4 className="text-lg font-medium text-black mb-4">Add New Skill</h4>
               <div className="space-y-3">
                 <Input
                   placeholder="Skill Name"
                   value={newSkill.name}
                   onChange={(e) => setNewSkill({...newSkill, name: e.target.value})}
-                  className="bg-gray-700 text-white border-gray-600"
+                  className="bg-white text-black border-gray-300"
                 />
                 <div>
-                  <Label className="text-gray-300 block mb-2">Proficiency Level: {newSkill.level}%</Label>
+                  <Label className="text-gray-700 block mb-2">Proficiency Level: {newSkill.level}%</Label>
                   <input
                     type="range"
                     min="0"
@@ -473,7 +478,7 @@ export const Dashboard = () => {
                     className="w-full"
                   />
                 </div>
-                <Button onClick={addSkill} className="bg-green-600 hover:bg-green-700">
+                <Button onClick={addSkill} className="bg-black hover:bg-gray-800 text-white">
                   <Plus size={16} className="mr-2" />
                   Add Skill
                 </Button>
@@ -482,22 +487,22 @@ export const Dashboard = () => {
 
             <div className="space-y-3">
               {skills.map((skill) => (
-                <div key={skill.id} className="bg-gray-800 p-4 rounded-lg flex justify-between items-center">
+                <div key={skill.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-center border border-gray-300">
                   <div className="flex-1">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-white font-medium">{skill.name}</span>
-                      <span className="text-gray-400">{skill.level}%</span>
+                      <span className="text-black font-medium">{skill.name}</span>
+                      <span className="text-gray-600">{skill.level}%</span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full bg-gray-300 rounded-full h-2">
                       <div
-                        className="bg-blue-500 h-2 rounded-full"
+                        className="bg-black h-2 rounded-full"
                         style={{ width: `${skill.level}%` }}
                       />
                     </div>
                   </div>
                   <button
                     onClick={() => removeSkill(skill.id)}
-                    className="text-red-400 hover:text-red-300 ml-4"
+                    className="text-red-600 hover:text-red-800 ml-4"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -510,37 +515,37 @@ export const Dashboard = () => {
         {/* Experience Tab */}
         {activeTab === 'experience' && (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-white">Manage Experience</h3>
+            <h3 className="text-xl font-semibold text-black">Manage Experience</h3>
             
-            <div className="bg-gray-800 p-4 rounded-lg">
-              <h4 className="text-lg font-medium text-white mb-4">Add New Experience</h4>
+            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+              <h4 className="text-lg font-medium text-black mb-4">Add New Experience</h4>
               <div className="space-y-3">
                 <Input
                   placeholder="Job Title"
                   value={newExperience.title}
                   onChange={(e) => setNewExperience({...newExperience, title: e.target.value})}
-                  className="bg-gray-700 text-white border-gray-600"
+                  className="bg-white text-black border-gray-300"
                 />
                 <Input
                   placeholder="Company Name"
                   value={newExperience.company}
                   onChange={(e) => setNewExperience({...newExperience, company: e.target.value})}
-                  className="bg-gray-700 text-white border-gray-600"
+                  className="bg-white text-black border-gray-300"
                 />
                 <Input
                   placeholder="Period (e.g., 2023 - Present)"
                   value={newExperience.period}
                   onChange={(e) => setNewExperience({...newExperience, period: e.target.value})}
-                  className="bg-gray-700 text-white border-gray-600"
+                  className="bg-white text-black border-gray-300"
                 />
                 <textarea
                   placeholder="Job Description"
                   value={newExperience.description}
                   onChange={(e) => setNewExperience({...newExperience, description: e.target.value})}
-                  className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600"
+                  className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
                   rows={3}
                 />
-                <Button onClick={addExperience} className="bg-green-600 hover:bg-green-700">
+                <Button onClick={addExperience} className="bg-black hover:bg-gray-800 text-white">
                   <Plus size={16} className="mr-2" />
                   Add Experience
                 </Button>
@@ -549,16 +554,16 @@ export const Dashboard = () => {
 
             <div className="space-y-3">
               {experiences.map((exp) => (
-                <div key={exp.id} className="bg-gray-800 p-4 rounded-lg flex justify-between items-start">
+                <div key={exp.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
                   <div>
-                    <h5 className="text-white font-medium">{exp.title}</h5>
-                    <p className="text-purple-400">{exp.company}</p>
-                    <p className="text-gray-400 text-sm">{exp.period}</p>
-                    <p className="text-gray-300 text-sm mt-2">{exp.description}</p>
+                    <h5 className="text-black font-medium">{exp.title}</h5>
+                    <p className="text-gray-800">{exp.company}</p>
+                    <p className="text-gray-600 text-sm">{exp.period}</p>
+                    <p className="text-gray-700 text-sm mt-2">{exp.description}</p>
                   </div>
                   <button
                     onClick={() => removeExperience(exp.id)}
-                    className="text-red-400 hover:text-red-300"
+                    className="text-red-600 hover:text-red-800"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -571,34 +576,34 @@ export const Dashboard = () => {
         {/* Content Tab */}
         {activeTab === 'content' && (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-white">Manage Content</h3>
+            <h3 className="text-xl font-semibold text-black">Manage Content</h3>
             
             <div className="space-y-4">
-              <div className="bg-gray-800 p-4 rounded-lg">
-                <Label className="text-white text-lg block mb-3">About Section</Label>
+              <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                <Label className="text-black text-lg block mb-3">About Section</Label>
                 <textarea
                   value={content.aboutText}
                   onChange={(e) => setContent({...content, aboutText: e.target.value})}
-                  className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600"
+                  className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
                   rows={4}
                   placeholder="Update about section content..."
                 />
               </div>
 
-              <div className="bg-gray-800 p-4 rounded-lg">
-                <Label className="text-white text-lg block mb-3">Contact Information</Label>
+              <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                <Label className="text-black text-lg block mb-3">Contact Information</Label>
                 <div className="space-y-3">
                   <Input
                     placeholder="Email Address"
                     value={content.contactEmail}
                     onChange={(e) => setContent({...content, contactEmail: e.target.value})}
-                    className="bg-gray-700 text-white border-gray-600"
+                    className="bg-white text-black border-gray-300"
                   />
                   <Input
                     placeholder="Phone Number"
                     value={content.contactPhone}
                     onChange={(e) => setContent({...content, contactPhone: e.target.value})}
-                    className="bg-gray-700 text-white border-gray-600"
+                    className="bg-white text-black border-gray-300"
                   />
                 </div>
               </div>
@@ -607,8 +612,8 @@ export const Dashboard = () => {
         )}
 
         {/* Save Button */}
-        <div className="mt-6 pt-6 border-t border-gray-700">
-          <Button className="bg-blue-600 hover:bg-blue-700">
+        <div className="mt-6 pt-6 border-t border-gray-300">
+          <Button onClick={handleSaveChanges} className="bg-black hover:bg-gray-800 text-white">
             <Save size={20} className="mr-2" />
             Save Changes
           </Button>

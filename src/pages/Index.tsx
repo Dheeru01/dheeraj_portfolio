@@ -10,21 +10,24 @@ import { Contact } from '../components/Contact';
 import { Navigation } from '../components/Navigation';
 import { Dashboard } from '../components/Dashboard';
 import { JotFormChatbot } from '../components/JotFormChatbot';
+import { PortfolioProvider } from '../contexts/PortfolioContext';
 
 const Index = () => {
   return (
-    <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-x-hidden">
-      <Navigation />
-      <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Gallery />
-      <Resume />
-      <Contact />
-      <Dashboard />
-      <JotFormChatbot />
-    </div>
+    <PortfolioProvider>
+      <div className="bg-white text-black overflow-x-hidden">
+        <Navigation />
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Gallery />
+        <Resume />
+        <Contact />
+        <Dashboard />
+        <JotFormChatbot />
+      </div>
+    </PortfolioProvider>
   );
 };
 
