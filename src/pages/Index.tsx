@@ -9,7 +9,7 @@ import { Resume } from '../components/Resume';
 import { Contact } from '../components/Contact';
 import { Navigation } from '../components/Navigation';
 import { Dashboard } from '../components/Dashboard';
-import { AIChatbot } from '../components/AIChatbot';
+import { JotFormChatbot } from '../components/JotFormChatbot';
 
 const Index = () => {
   return (
@@ -23,7 +23,7 @@ const Index = () => {
       <Resume />
       <Contact />
       <Dashboard />
-      <AIChatbot />
+      <JotFormChatbot />
     </div>
   );
 };
