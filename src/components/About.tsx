@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { Code, Lightbulb, Users, Award } from 'lucide-react';
+import { usePortfolio } from '../contexts/PortfolioContext';
 
 export const About = () => {
+  const { portfolioData } = usePortfolio();
+
   const highlights = [
     {
       icon: <Code className="w-8 h-8" />,
@@ -27,45 +30,51 @@ export const About = () => {
   ];
 
   return (
-    <section id="about" className="py-20 px-6">
+    <section id="about" className="py-20 px-6 bg-white">
       <div className="container mx-auto max-w-6xl">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-          About <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Me</span>
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-black">
+          About <span className="bg-gradient-to-r from-gray-600 to-black bg-clip-text text-transparent">Me</span>
         </h2>
         
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div className="space-y-6">
-            <p className="text-lg text-gray-300 leading-relaxed">
-              I'm a passionate Full Stack Developer with a deep love for creating innovative solutions 
-              that make a real impact. With expertise spanning from frontend frameworks to AI/ML 
-              implementations, I bring ideas to life through code.
+            <p className="text-lg text-gray-800 leading-relaxed">
+              {portfolioData.content.aboutText}
             </p>
-            <p className="text-lg text-gray-300 leading-relaxed">
+            <p className="text-lg text-gray-800 leading-relaxed">
               My journey in technology has been driven by curiosity and a constant desire to learn. 
               Whether it's building scalable web applications, exploring machine learning algorithms, 
               or leading development teams, I approach every challenge with enthusiasm and dedication.
             </p>
             <div className="flex gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-400">50+</div>
-                <div className="text-sm text-gray-400">Projects Completed</div>
+                <div className="text-3xl font-bold text-black">50+</div>
+                <div className="text-sm text-gray-600">Projects Completed</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-400">5+</div>
-                <div className="text-sm text-gray-400">Years Experience</div>
+                <div className="text-3xl font-bold text-black">5+</div>
+                <div className="text-sm text-gray-600">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-pink-400">20+</div>
-                <div className="text-sm text-gray-400">Technologies</div>
+                <div className="text-3xl font-bold text-black">20+</div>
+                <div className="text-sm text-gray-600">Technologies</div>
               </div>
             </div>
           </div>
           
           <div className="relative">
-            <div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-              <div className="w-72 h-72 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-6xl font-bold">
-                DK
-              </div>
+            <div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center overflow-hidden border-4 border-black">
+              {portfolioData.content.profileImage ? (
+                <img 
+                  src={portfolioData.content.profileImage} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-72 h-72 rounded-full bg-gradient-to-br from-gray-600 to-black flex items-center justify-center text-6xl font-bold text-white">
+                  DK
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -74,13 +83,13 @@ export const About = () => {
           {highlights.map((item, index) => (
             <div
               key={index}
-              className="bg-white/5 backdrop-blur-lg rounded-lg p-6 border border-white/10 hover:bg-white/10 transition-all duration-300 group"
+              className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group"
             >
-              <div className="text-blue-400 mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-black mb-4 group-hover:scale-110 transition-transform duration-300">
                 {item.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-              <p className="text-gray-400">{item.description}</p>
+              <h3 className="text-xl font-semibold mb-2 text-black">{item.title}</h3>
+              <p className="text-gray-700">{item.description}</p>
             </div>
           ))}
         </div>
