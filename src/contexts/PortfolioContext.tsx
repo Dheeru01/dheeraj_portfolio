@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface Project {
@@ -159,6 +160,16 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  // Auto-save to localStorage whenever portfolioData changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+      console.log('Portfolio data auto-saved:', portfolioData);
+    } catch (error) {
+      console.error('Error auto-saving portfolio data:', error);
+    }
+  }, [portfolioData]);
+
   const updateProjects = (projects: Project[]) => {
     console.log('Updating projects:', projects);
     setPortfolioData(prev => ({ ...prev, projects }));
@@ -187,7 +198,7 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
   const saveChanges = () => {
     try {
       localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
-      console.log('Portfolio data saved successfully:', portfolioData);
+      console.log('Portfolio data saved manually:', portfolioData);
     } catch (error) {
       console.error('Error saving portfolio data:', error);
     }

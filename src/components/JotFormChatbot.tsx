@@ -1,24 +1,35 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const JotFormChatbot = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    // Create script element
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jotfor.ms/agent/embedjs/019744fb1eec735c8a90cbb1e218ea681ae5/embed.js?skipWelcome=1&maximizable=1';
-    script.async = true;
+    // Only load the chatbot script when explicitly requested
+    // This prevents auto-opening on page load
+    const loadChatbot = () => {
+      if (!isLoaded) {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jotfor.ms/agent/embedjs/019744fb1eec735c8a90cbb1e218ea681ae5/embed.js?skipWelcome=1&maximizable=1&autoOpen=false';
+        script.async = true;
+        document.body.appendChild(script);
+        setIsLoaded(true);
+      }
+    };
 
-    // Append to body
-    document.body.appendChild(script);
+    // Add a small delay to prevent immediate loading
+    const timer = setTimeout(() => {
+      loadChatbot();
+    }, 2000);
 
-    // Cleanup function to remove script when component unmounts
     return () => {
+      clearTimeout(timer);
       const existingScript = document.querySelector('script[src*="jotfor.ms"]');
       if (existingScript) {
         document.body.removeChild(existingScript);
       }
     };
-  }, []);
+  }, [isLoaded]);
 
   return null; // This component doesn't render anything visible itself
 };
