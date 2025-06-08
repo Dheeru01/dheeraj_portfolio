@@ -130,7 +130,7 @@ export const Hero = () => {
 
         </h1>
         
-        <p className="text-xl md:text-2xl text-gray-300 mb-8 animate-fade-in animation-delay-300">
+        <p className="text-xl md:text-2xl text-gray-800 mb-8 animate-fade-in animation-delay-300">
           Full Stack Developer • AI/ML Enthusiast • Innovation Driver
         </p>
         
