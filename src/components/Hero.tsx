@@ -91,22 +91,43 @@ export const Hero = () => {
       
       <div className="relative z-10 text-center px-6">
         <h1 className="text-6xl md:text-8xl font-bold mb-6 animate-fade-in">
-          <div className="text-6xl md:text-8xl font-extrabold tracking-wider mb-4">
-            {'DHEERAJ KANUKUNTLA'.split('').map((letter, index) => (
-              <span
-                key={index}
-                className={`inline-block bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-float ${
-                  letter === ' ' ? 'w-4' : ''
-                }`}
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                  fontFamily: "'Playfair Display', serif"
-                }}
-              >
-                {letter === ' ' ? '\u00A0' : letter}
-              </span>
-            ))}
-          </div>
+          {/* Animated Name */}
+<div className="text-center mb-8">
+  <div className="text-6xl md:text-8xl font-extrabold tracking-wider">
+    {'DHEERAJ'.split('').map((letter, index) => (
+      <span
+        key={index}
+        className={`inline-block bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-float ${
+          letter === ' ' ? 'w-4' : ''
+        }`}
+        style={{
+          animationDelay: `${index * 0.1}s`,
+          fontFamily: "'Playfair Display', serif"
+        }}
+      >
+        {letter === ' ' ? '\u00A0' : letter}
+      </span>
+    ))}
+  </div>
+
+  <div className="text-6xl md:text-8xl font-extrabold tracking-wider mt-2">
+    {'KANUKUNTLA'.split('').map((letter, index) => (
+      <span
+        key={index}
+        className={`inline-block bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-float ${
+          letter === ' ' ? 'w-4' : ''
+        }`}
+        style={{
+          animationDelay: `${(index + 8) * 0.1}s`, // Stagger the animation to continue smoothly
+          fontFamily: "'Playfair Display', serif"
+        }}
+      >
+        {letter}
+      </span>
+    ))}
+  </div>
+</div>
+
         </h1>
         
         <p className="text-xl md:text-2xl text-gray-300 mb-8 animate-fade-in animation-delay-300">
