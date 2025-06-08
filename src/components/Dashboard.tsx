@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Edit3, Save, Plus, Trash2, Eye, EyeOff, Lock, User, Mail, Upload, Image, Link, Star } from 'lucide-react';
+import { Edit3, Save, EyeOff } from 'lucide-react';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { usePortfolio } from '../contexts/PortfolioContext';
+import { DashboardLogin } from './dashboard/DashboardLogin';
+import { DashboardTabs } from './dashboard/DashboardTabs';
+import { ProjectsTab } from './dashboard/ProjectsTab';
 
 export const Dashboard = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState('projects');
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [showChangePassword, setShowChangePassword] = useState(false);
-  
-  // Login state
-  const [loginData, setLoginData] = useState({ username: '', password: '' });
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [resetEmail, setResetEmail] = useState('');
   
   const { toast } = useToast();
   const { portfolioData, updateProjects, updateSkills, updateExperiences, updateGallery, updateHighlights, updateContent, saveChanges } = usePortfolio();
@@ -27,7 +19,6 @@ export const Dashboard = () => {
   const [adminPassword, setAdminPassword] = useState(() => {
     return localStorage.getItem('adminPassword') || 'Dheeraj@2004';
   });
-  const ADMIN_USERNAME = 'Kanukuntla Dheeraj';
 
   // Local state for editing
   const [projects, setProjects] = useState(portfolioData.projects);
@@ -56,20 +47,7 @@ export const Dashboard = () => {
   }, [portfolioData]);
 
   const handleLogin = () => {
-    if (loginData.username === ADMIN_USERNAME && loginData.password === adminPassword) {
-      setIsLoggedIn(true);
-      setLoginData({ username: '', password: '' });
-      toast({
-        title: "Success",
-        description: "Logged in successfully!",
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "Invalid username or password",
-        variant: "destructive",
-      });
-    }
+    setIsLoggedIn(true);
   };
 
   const handleSaveChanges = () => {
@@ -88,57 +66,6 @@ export const Dashboard = () => {
         description: "All changes have been saved successfully!",
       });
     }, 100);
-  };
-
-  const handleForgotPassword = () => {
-    if (resetEmail === content.contactEmail) {
-      // Simulate sending reset email
-      const tempPassword = 'TempPass123';
-      setAdminPassword(tempPassword);
-      localStorage.setItem('adminPassword', tempPassword);
-      toast({
-        title: "Password Reset",
-        description: `Temporary password: ${tempPassword}. Please change it immediately.`,
-      });
-      setShowForgotPassword(false);
-      setResetEmail('');
-    } else {
-      toast({
-        title: "Error",
-        description: "Email not found in our records",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleChangePassword = () => {
-    if (currentPassword !== adminPassword) {
-      toast({
-        title: "Error",
-        description: "Current password is incorrect",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (newPassword === confirmPassword && newPassword.length >= 6) {
-      setAdminPassword(newPassword);
-      localStorage.setItem('adminPassword', newPassword);
-      toast({
-        title: "Success",
-        description: "Password changed successfully!",
-      });
-      setShowChangePassword(false);
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } else {
-      toast({
-        title: "Error",
-        description: "Passwords don't match or are too short (min 6 characters)",
-        variant: "destructive",
-      });
-    }
   };
 
   const handleLogout = () => {
@@ -291,164 +218,20 @@ export const Dashboard = () => {
   // Login screen
   if (!isLoggedIn) {
     return (
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg p-8 w-full max-w-md border border-gray-300">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-black flex items-center gap-2">
-              <Lock size={24} />
-              Admin Login
-            </h2>
-            <button
-              onClick={() => setIsVisible(false)}
-              className="text-gray-600 hover:text-black"
-            >
-              <EyeOff size={24} />
-            </button>
-          </div>
-
-          {!showForgotPassword && !showChangePassword ? (
-            <div className="space-y-6">
-              <div>
-                <Label htmlFor="username" className="text-black">Username</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  value={loginData.username}
-                  onChange={(e) => setLoginData({...loginData, username: e.target.value})}
-                  className="mt-2 bg-gray-100 text-black border-gray-300"
-                  placeholder="Enter username"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="password" className="text-black">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={loginData.password}
-                  onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-                  className="mt-2 bg-gray-100 text-black border-gray-300"
-                  placeholder="Enter password"
-                />
-              </div>
-
-              <Button 
-                onClick={handleLogin}
-                className="w-full bg-black hover:bg-gray-800 text-white"
-              >
-                Login
-              </Button>
-
-              <div className="text-center space-y-2">
-                <button
-                  onClick={() => setShowForgotPassword(true)}
-                  className="text-gray-600 hover:text-black text-sm"
-                >
-                  Forgot Password?
-                </button>
-                <br />
-                <button
-                  onClick={() => setShowChangePassword(true)}
-                  className="text-gray-600 hover:text-black text-sm"
-                >
-                  Change Password
-                </button>
-              </div>
-            </div>
-          ) : showForgotPassword ? (
-            <div className="space-y-6">
-              <div>
-                <Label htmlFor="resetEmail" className="text-black">Email Address</Label>
-                <Input
-                  id="resetEmail"
-                  type="email"
-                  value={resetEmail}
-                  onChange={(e) => setResetEmail(e.target.value)}
-                  className="mt-2 bg-gray-100 text-black border-gray-300"
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div className="flex gap-3">
-                <Button 
-                  onClick={handleForgotPassword}
-                  className="flex-1 bg-black hover:bg-gray-800 text-white"
-                >
-                  Send Reset Link
-                </Button>
-                <Button 
-                  onClick={() => setShowForgotPassword(false)}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Back
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <div>
-                <Label htmlFor="currentPassword" className="text-black">Current Password</Label>
-                <Input
-                  id="currentPassword"
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="mt-2 bg-gray-100 text-black border-gray-300"
-                  placeholder="Enter current password"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="newPassword" className="text-black">New Password</Label>
-                <Input
-                  id="newPassword"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="mt-2 bg-gray-100 text-black border-gray-300"
-                  placeholder="Enter new password"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="confirmPassword" className="text-black">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="mt-2 bg-gray-100 text-black border-gray-300"
-                  placeholder="Confirm new password"
-                />
-              </div>
-
-              <div className="flex gap-3">
-                <Button 
-                  onClick={handleChangePassword}
-                  className="flex-1 bg-black hover:bg-gray-800 text-white"
-                >
-                  Change Password
-                </Button>
-                <Button 
-                  onClick={() => setShowChangePassword(false)}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Back
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      <DashboardLogin
+        onLogin={handleLogin}
+        onClose={() => setIsVisible(false)}
+        adminPassword={adminPassword}
+        setAdminPassword={setAdminPassword}
+        contactEmail={content.contactEmail}
+      />
     );
   }
 
   // Main dashboard
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-300">
+      <div className="bg-white rounded-lg p-6 w-full max-w-6xl h-[90vh] border border-gray-300 flex flex-col">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-black">Portfolio Dashboard</h2>
           <div className="flex gap-2">
@@ -464,547 +247,453 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex space-x-4 mb-6 overflow-x-auto">
-          {['projects', 'highlights', 'skills', 'experience', 'gallery', 'technologies', 'profile', 'content'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-lg capitalize transition-colors whitespace-nowrap ${
-                activeTab === tab
-                  ? 'bg-black text-white'
-                  : 'bg-gray-200 text-black hover:bg-gray-300'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+        <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        {/* Projects Tab */}
-        {activeTab === 'projects' && (
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-black">Manage Projects</h3>
+        <div className="flex-1 overflow-hidden">
+          <div className="h-full overflow-y-auto pr-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <style jsx>{`
+              div::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
             
-            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-              <h4 className="text-lg font-medium text-black mb-4">Add New Project</h4>
-              <div className="space-y-3">
-                <Input
-                  placeholder="Project Title"
-                  value={newProject.title}
-                  onChange={(e) => setNewProject({...newProject, title: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <textarea
-                  placeholder="Project Description"
-                  value={newProject.description}
-                  onChange={(e) => setNewProject({...newProject, description: e.target.value})}
-                  className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
-                  rows={3}
-                />
-                <Input
-                  placeholder="Technologies Used (comma separated)"
-                  value={newProject.tech}
-                  onChange={(e) => setNewProject({...newProject, tech: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Input
-                  placeholder="Project Image URL"
-                  value={newProject.image}
-                  onChange={(e) => setNewProject({...newProject, image: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Input
-                  placeholder="GitHub URL"
-                  value={newProject.github}
-                  onChange={(e) => setNewProject({...newProject, github: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Input
-                  placeholder="Live Demo URL"
-                  value={newProject.live}
-                  onChange={(e) => setNewProject({...newProject, live: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="featured"
-                    checked={newProject.featured}
-                    onChange={(e) => setNewProject({...newProject, featured: e.target.checked})}
-                    className="rounded"
-                  />
-                  <Label htmlFor="featured" className="text-black">Featured Project</Label>
-                </div>
-                <Button onClick={addProject} className="bg-black hover:bg-gray-800 text-white">
-                  <Plus size={16} className="mr-2" />
-                  Add Project
-                </Button>
-              </div>
-            </div>
+            {activeTab === 'projects' && (
+              <ProjectsTab projects={projects} setProjects={setProjects} />
+            )}
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {projects.map((project) => (
-                <div key={project.id} className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <h5 className="text-black font-medium">{project.title}</h5>
-                      {project.featured && <Star size={16} className="text-yellow-500 fill-current" />}
+            {/* Highlights Tab */}
+            {activeTab === 'highlights' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-black">Manage Highlight Cards</h3>
+                
+                <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                  <h4 className="text-lg font-medium text-black mb-4">Add New Highlight Card</h4>
+                  <div className="space-y-3">
+                    <Input
+                      placeholder="Card Title"
+                      value={newHighlight.title}
+                      onChange={(e) => setNewHighlight({...newHighlight, title: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <textarea
+                      placeholder="Card Description"
+                      value={newHighlight.description}
+                      onChange={(e) => setNewHighlight({...newHighlight, description: e.target.value})}
+                      className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
+                      rows={3}
+                    />
+                    <Input
+                      placeholder="SVG Icon Code (optional)"
+                      value={newHighlight.icon}
+                      onChange={(e) => setNewHighlight({...newHighlight, icon: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <Button onClick={addHighlight} className="bg-black hover:bg-gray-800 text-white">
+                      <Plus size={16} className="mr-2" />
+                      Add Highlight Card
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  {highlights.map((highlight) => (
+                    <div key={highlight.id} className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                      <div className="flex justify-between items-start mb-2">
+                        <h5 className="text-black font-medium">{highlight.title}</h5>
+                        <button
+                          onClick={() => removeHighlight(highlight.id)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                      <p className="text-gray-600 text-sm">{highlight.description}</p>
                     </div>
-                    <div className="flex gap-2">
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Gallery Tab */}
+            {activeTab === 'gallery' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-black">Manage Gallery</h3>
+                
+                <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                  <h4 className="text-lg font-medium text-black mb-4">Add New Gallery Item</h4>
+                  <div className="space-y-3">
+                    <Input
+                      placeholder="Image URL"
+                      value={newGalleryItem.src}
+                      onChange={(e) => setNewGalleryItem({...newGalleryItem, src: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <Input
+                      placeholder="Image Title"
+                      value={newGalleryItem.title}
+                      onChange={(e) => setNewGalleryItem({...newGalleryItem, title: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <Input
+                      placeholder="Category"
+                      value={newGalleryItem.category}
+                      onChange={(e) => setNewGalleryItem({...newGalleryItem, category: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <Button onClick={addGalleryItem} className="bg-black hover:bg-gray-800 text-white">
+                      <Plus size={16} className="mr-2" />
+                      Add Gallery Item
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {gallery.map((item) => (
+                    <div key={item.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
+                      <div className="flex gap-4">
+                        <img src={item.src} alt={item.title} className="w-16 h-16 object-cover rounded" />
+                        <div>
+                          <h5 className="text-black font-medium">{item.title}</h5>
+                          <p className="text-gray-600">{item.category}</p>
+                        </div>
+                      </div>
                       <button
-                        onClick={() => toggleProjectFeatured(project.id)}
-                        className="text-gray-600 hover:text-yellow-500"
-                      >
-                        <Star size={16} className={project.featured ? "text-yellow-500 fill-current" : ""} />
-                      </button>
-                      <button
-                        onClick={() => removeProject(project.id)}
+                        onClick={() => removeGalleryItem(item.id)}
                         className="text-red-600 hover:text-red-800"
                       >
                         <Trash2 size={16} />
                       </button>
                     </div>
-                  </div>
-                  <p className="text-gray-600 text-sm mb-2">{project.description}</p>
-                  <p className="text-gray-800 text-xs">Tech: {project.tech}</p>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Highlights Tab */}
-        {activeTab === 'highlights' && (
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-black">Manage Highlight Cards</h3>
-            
-            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-              <h4 className="text-lg font-medium text-black mb-4">Add New Highlight Card</h4>
-              <div className="space-y-3">
-                <Input
-                  placeholder="Card Title"
-                  value={newHighlight.title}
-                  onChange={(e) => setNewHighlight({...newHighlight, title: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <textarea
-                  placeholder="Card Description"
-                  value={newHighlight.description}
-                  onChange={(e) => setNewHighlight({...newHighlight, description: e.target.value})}
-                  className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
-                  rows={3}
-                />
-                <Input
-                  placeholder="SVG Icon Code (optional)"
-                  value={newHighlight.icon}
-                  onChange={(e) => setNewHighlight({...newHighlight, icon: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Button onClick={addHighlight} className="bg-black hover:bg-gray-800 text-white">
-                  <Plus size={16} className="mr-2" />
-                  Add Highlight Card
-                </Button>
               </div>
-            </div>
+            )}
 
-            <div className="grid gap-4 md:grid-cols-2">
-              {highlights.map((highlight) => (
-                <div key={highlight.id} className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-                  <div className="flex justify-between items-start mb-2">
-                    <h5 className="text-black font-medium">{highlight.title}</h5>
-                    <button
-                      onClick={() => removeHighlight(highlight.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                  <p className="text-gray-600 text-sm">{highlight.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Gallery Tab */}
-        {activeTab === 'gallery' && (
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-black">Manage Gallery</h3>
-            
-            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-              <h4 className="text-lg font-medium text-black mb-4">Add New Gallery Item</h4>
-              <div className="space-y-3">
-                <Input
-                  placeholder="Image URL"
-                  value={newGalleryItem.src}
-                  onChange={(e) => setNewGalleryItem({...newGalleryItem, src: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Input
-                  placeholder="Image Title"
-                  value={newGalleryItem.title}
-                  onChange={(e) => setNewGalleryItem({...newGalleryItem, title: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Input
-                  placeholder="Category"
-                  value={newGalleryItem.category}
-                  onChange={(e) => setNewGalleryItem({...newGalleryItem, category: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Button onClick={addGalleryItem} className="bg-black hover:bg-gray-800 text-white">
-                  <Plus size={16} className="mr-2" />
-                  Add Gallery Item
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {gallery.map((item) => (
-                <div key={item.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
-                  <div className="flex gap-4">
-                    <img src={item.src} alt={item.title} className="w-16 h-16 object-cover rounded" />
-                    <div>
-                      <h5 className="text-black font-medium">{item.title}</h5>
-                      <p className="text-gray-600">{item.category}</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => removeGalleryItem(item.id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Technologies Tab */}
-        {activeTab === 'technologies' && (
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-black">Manage Technologies</h3>
-            
-            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-              <h4 className="text-lg font-medium text-black mb-4">Add New Technology</h4>
-              <div className="flex gap-3">
-                <Input
-                  placeholder="Technology Name"
-                  value={newTechnology}
-                  onChange={(e) => setNewTechnology(e.target.value)}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Button onClick={addTechnology} className="bg-black hover:bg-gray-800 text-white">
-                  <Plus size={16} className="mr-2" />
-                  Add
-                </Button>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {content.technologies.map((tech) => (
-                <div key={tech} className="flex items-center gap-2 bg-gray-200 px-3 py-1 rounded-full">
-                  <span className="text-black">{tech}</span>
-                  <button
-                    onClick={() => removeTechnology(tech)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Profile Tab */}
-        {activeTab === 'profile' && (
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-black">Profile Management</h3>
-            
-            <div className="bg-gray-100 p-6 rounded-lg border border-gray-300">
-              <h4 className="text-lg font-medium text-black mb-4">Profile Picture</h4>
-              <div className="flex items-center gap-6">
-                <div className="w-24 h-24 rounded-full bg-black flex items-center justify-center overflow-hidden">
-                  {content.profileImage ? (
-                    <img 
-                      src={content.profileImage} 
-                      alt="Profile" 
-                      className="w-full h-full object-cover"
+            {/* Technologies Tab */}
+            {activeTab === 'technologies' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-black">Manage Technologies</h3>
+                
+                <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                  <h4 className="text-lg font-medium text-black mb-4">Add New Technology</h4>
+                  <div className="flex gap-3">
+                    <Input
+                      placeholder="Technology Name"
+                      value={newTechnology}
+                      onChange={(e) => setNewTechnology(e.target.value)}
+                      className="bg-white text-black border-gray-300"
                     />
-                  ) : (
-                    <User size={40} className="text-white" />
-                  )}
+                    <Button onClick={addTechnology} className="bg-black hover:bg-gray-800 text-white">
+                      <Plus size={16} className="mr-2" />
+                      Add
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="profileImageInput"
-                  />
-                  <Label htmlFor="profileImageInput" className="cursor-pointer">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white transition-colors">
-                      <Upload size={16} />
-                      Upload New Photo
+
+                <div className="flex flex-wrap gap-2">
+                  {content.technologies.map((tech) => (
+                    <div key={tech} className="flex items-center gap-2 bg-gray-200 px-3 py-1 rounded-full">
+                      <span className="text-black">{tech}</span>
+                      <button
+                        onClick={() => removeTechnology(tech)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
-                  </Label>
-                  <p className="text-gray-600 text-sm mt-2">
-                    Recommended: Square image, at least 200x200px
-                  </p>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
 
-            <div className="bg-gray-100 p-6 rounded-lg border border-gray-300">
-              <h4 className="text-lg font-medium text-black mb-4">Resume Upload</h4>
-              <div className="flex items-center gap-6">
-                <div className="flex-1">
-                  <input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    onChange={handleResumeUpload}
-                    className="hidden"
-                    id="resumeInput"
-                  />
-                  <Label htmlFor="resumeInput" className="cursor-pointer">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white transition-colors">
-                      <Upload size={16} />
-                      Upload Resume
+            {/* Profile Tab */}
+            {activeTab === 'profile' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-black">Profile Management</h3>
+                
+                <div className="bg-gray-100 p-6 rounded-lg border border-gray-300">
+                  <h4 className="text-lg font-medium text-black mb-4">Profile Picture</h4>
+                  <div className="flex items-center gap-6">
+                    <div className="w-24 h-24 rounded-full bg-black flex items-center justify-center overflow-hidden">
+                      {content.profileImage ? (
+                        <img 
+                          src={content.profileImage} 
+                          alt="Profile" 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <User size={40} className="text-white" />
+                      )}
                     </div>
-                  </Label>
-                  {content.resumeFile && (
-                    <p className="text-green-600 text-sm mt-2">✓ Resume uploaded successfully</p>
-                  )}
+                    <div className="flex-1">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="profileImageInput"
+                      />
+                      <Label htmlFor="profileImageInput" className="cursor-pointer">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white transition-colors">
+                          <Upload size={16} />
+                          Upload New Photo
+                        </div>
+                      </Label>
+                      <p className="text-gray-600 text-sm mt-2">
+                        Recommended: Square image, at least 200x200px
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gray-100 p-6 rounded-lg border border-gray-300">
+                  <h4 className="text-lg font-medium text-black mb-4">Resume Upload</h4>
+                  <div className="flex items-center gap-6">
+                    <div className="flex-1">
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={handleResumeUpload}
+                        className="hidden"
+                        id="resumeInput"
+                      />
+                      <Label htmlFor="resumeInput" className="cursor-pointer">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white transition-colors">
+                          <Upload size={16} />
+                          Upload Resume
+                        </div>
+                      </Label>
+                      {content.resumeFile && (
+                        <p className="text-green-600 text-sm mt-2">✓ Resume uploaded successfully</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Skills Tab */}
-        {activeTab === 'skills' && (
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-black">Manage Skills</h3>
-            
-            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-              <h4 className="text-lg font-medium text-black mb-4">Add New Skill</h4>
-              <div className="space-y-3">
-                <Input
-                  placeholder="Skill Name"
-                  value={newSkill.name}
-                  onChange={(e) => setNewSkill({...newSkill, name: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <div>
-                  <Label className="text-gray-700 block mb-2">Proficiency Level: {newSkill.level}%</Label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={newSkill.level}
-                    onChange={(e) => setNewSkill({...newSkill, level: parseInt(e.target.value)})}
-                    className="w-full"
-                  />
-                </div>
-                <Button onClick={addSkill} className="bg-black hover:bg-gray-800 text-white">
-                  <Plus size={16} className="mr-2" />
-                  Add Skill
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {skills.map((skill) => (
-                <div key={skill.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-center border border-gray-300">
-                  <div className="flex-1">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-black font-medium">{skill.name}</span>
-                      <span className="text-gray-600">{skill.level}%</span>
+            {/* Skills Tab */}
+            {activeTab === 'skills' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-black">Manage Skills</h3>
+                
+                <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                  <h4 className="text-lg font-medium text-black mb-4">Add New Skill</h4>
+                  <div className="space-y-3">
+                    <Input
+                      placeholder="Skill Name"
+                      value={newSkill.name}
+                      onChange={(e) => setNewSkill({...newSkill, name: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <div>
+                      <Label className="text-gray-700 block mb-2">Proficiency Level: {newSkill.level}%</Label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={newSkill.level}
+                        onChange={(e) => setNewSkill({...newSkill, level: parseInt(e.target.value)})}
+                        className="w-full"
+                      />
                     </div>
-                    <div className="w-full bg-gray-300 rounded-full h-2">
-                      <div
-                        className="bg-black h-2 rounded-full"
-                        style={{ width: `${skill.level}%` }}
+                    <Button onClick={addSkill} className="bg-black hover:bg-gray-800 text-white">
+                      <Plus size={16} className="mr-2" />
+                      Add Skill
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {skills.map((skill) => (
+                    <div key={skill.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-center border border-gray-300">
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-black font-medium">{skill.name}</span>
+                          <span className="text-gray-600">{skill.level}%</span>
+                        </div>
+                        <div className="w-full bg-gray-300 rounded-full h-2">
+                          <div
+                            className="bg-black h-2 rounded-full"
+                            style={{ width: `${skill.level}%` }}
+                          />
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => removeSkill(skill.id)}
+                        className="text-red-600 hover:text-red-800 ml-4"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Experience Tab */}
+            {activeTab === 'experience' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-black">Manage Experience</h3>
+                
+                <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                  <h4 className="text-lg font-medium text-black mb-4">Add New Experience</h4>
+                  <div className="space-y-3">
+                    <Input
+                      placeholder="Job Title"
+                      value={newExperience.title}
+                      onChange={(e) => setNewExperience({...newExperience, title: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <Input
+                      placeholder="Company Name"
+                      value={newExperience.company}
+                      onChange={(e) => setNewExperience({...newExperience, company: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <Input
+                      placeholder="Period (e.g., 2023 - Present)"
+                      value={newExperience.period}
+                      onChange={(e) => setNewExperience({...newExperience, period: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <textarea
+                      placeholder="Job Description"
+                      value={newExperience.description}
+                      onChange={(e) => setNewExperience({...newExperience, description: e.target.value})}
+                      className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
+                      rows={3}
+                    />
+                    <Button onClick={addExperience} className="bg-black hover:bg-gray-800 text-white">
+                      <Plus size={16} className="mr-2" />
+                      Add Experience
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {experiences.map((exp) => (
+                    <div key={exp.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
+                      <div>
+                        <h5 className="text-black font-medium">{exp.title}</h5>
+                        <p className="text-gray-800">{exp.company}</p>
+                        <p className="text-gray-600 text-sm">{exp.period}</p>
+                        <p className="text-gray-700 text-sm mt-2">{exp.description}</p>
+                      </div>
+                      <button
+                        onClick={() => removeExperience(exp.id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Content Tab */}
+            {activeTab === 'content' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-black">Manage Content</h3>
+                
+                <div className="space-y-4">
+                  <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                    <Label className="text-black text-lg block mb-3">About Section</Label>
+                    <textarea
+                      value={content.aboutText}
+                      onChange={(e) => setContent({...content, aboutText: e.target.value})}
+                      className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
+                      rows={4}
+                      placeholder="Update about section content..."
+                    />
+                  </div>
+
+                  <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                    <Label className="text-black text-lg block mb-3">About Section Stats</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div>
+                        <Label className="text-gray-700 block mb-1">Projects Completed</Label>
+                        <Input
+                          type="number"
+                          value={content.projectsCompleted}
+                          onChange={(e) => setContent({...content, projectsCompleted: parseInt(e.target.value) || 0})}
+                          className="bg-white text-black border-gray-300"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-gray-700 block mb-1">Years Experience</Label>
+                        <Input
+                          type="number"
+                          value={content.yearsExperience}
+                          onChange={(e) => setContent({...content, yearsExperience: parseInt(e.target.value) || 0})}
+                          className="bg-white text-black border-gray-300"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-gray-700 block mb-1">Technologies Count</Label>
+                        <Input
+                          type="number"
+                          value={content.technologiesCount}
+                          onChange={(e) => setContent({...content, technologiesCount: parseInt(e.target.value) || 0})}
+                          className="bg-white text-black border-gray-300"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                    <Label className="text-black text-lg block mb-3">Contact Information</Label>
+                    <div className="space-y-3">
+                      <Input
+                        placeholder="Email Address"
+                        value={content.contactEmail}
+                        onChange={(e) => setContent({...content, contactEmail: e.target.value})}
+                        className="bg-white text-black border-gray-300"
+                      />
+                      <Input
+                        placeholder="Phone Number"
+                        value={content.contactPhone}
+                        onChange={(e) => setContent({...content, contactPhone: e.target.value})}
+                        className="bg-white text-black border-gray-300"
+                      />
+                      <Input
+                        placeholder="Location"
+                        value={content.location}
+                        onChange={(e) => setContent({...content, location: e.target.value})}
+                        className="bg-white text-black border-gray-300"
                       />
                     </div>
                   </div>
-                  <button
-                    onClick={() => removeSkill(skill.id)}
-                    className="text-red-600 hover:text-red-800 ml-4"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+
+                  <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                    <Label className="text-black text-lg block mb-3">Social Media Links</Label>
+                    <div className="space-y-3">
+                      <Input
+                        placeholder="GitHub URL"
+                        value={content.githubUrl}
+                        onChange={(e) => setContent({...content, githubUrl: e.target.value})}
+                        className="bg-white text-black border-gray-300"
+                      />
+                      <Input
+                        placeholder="LinkedIn URL"
+                        value={content.linkedinUrl}
+                        onChange={(e) => setContent({...content, linkedinUrl: e.target.value})}
+                        className="bg-white text-black border-gray-300"
+                      />
+                      <Input
+                        placeholder="Twitter URL"
+                        value={content.twitterUrl}
+                        onChange={(e) => setContent({...content, twitterUrl: e.target.value})}
+                        className="bg-white text-black border-gray-300"
+                      />
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
-        )}
-
-        {/* Experience Tab */}
-        {activeTab === 'experience' && (
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-black">Manage Experience</h3>
-            
-            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-              <h4 className="text-lg font-medium text-black mb-4">Add New Experience</h4>
-              <div className="space-y-3">
-                <Input
-                  placeholder="Job Title"
-                  value={newExperience.title}
-                  onChange={(e) => setNewExperience({...newExperience, title: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Input
-                  placeholder="Company Name"
-                  value={newExperience.company}
-                  onChange={(e) => setNewExperience({...newExperience, company: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <Input
-                  placeholder="Period (e.g., 2023 - Present)"
-                  value={newExperience.period}
-                  onChange={(e) => setNewExperience({...newExperience, period: e.target.value})}
-                  className="bg-white text-black border-gray-300"
-                />
-                <textarea
-                  placeholder="Job Description"
-                  value={newExperience.description}
-                  onChange={(e) => setNewExperience({...newExperience, description: e.target.value})}
-                  className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
-                  rows={3}
-                />
-                <Button onClick={addExperience} className="bg-black hover:bg-gray-800 text-white">
-                  <Plus size={16} className="mr-2" />
-                  Add Experience
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {experiences.map((exp) => (
-                <div key={exp.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
-                  <div>
-                    <h5 className="text-black font-medium">{exp.title}</h5>
-                    <p className="text-gray-800">{exp.company}</p>
-                    <p className="text-gray-600 text-sm">{exp.period}</p>
-                    <p className="text-gray-700 text-sm mt-2">{exp.description}</p>
-                  </div>
-                  <button
-                    onClick={() => removeExperience(exp.id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Content Tab */}
-        {activeTab === 'content' && (
-          <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-black">Manage Content</h3>
-            
-            <div className="space-y-4">
-              <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-                <Label className="text-black text-lg block mb-3">About Section</Label>
-                <textarea
-                  value={content.aboutText}
-                  onChange={(e) => setContent({...content, aboutText: e.target.value})}
-                  className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
-                  rows={4}
-                  placeholder="Update about section content..."
-                />
-              </div>
-
-              <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-                <Label className="text-black text-lg block mb-3">About Section Stats</Label>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div>
-                    <Label className="text-gray-700 block mb-1">Projects Completed</Label>
-                    <Input
-                      type="number"
-                      value={content.projectsCompleted}
-                      onChange={(e) => setContent({...content, projectsCompleted: parseInt(e.target.value) || 0})}
-                      className="bg-white text-black border-gray-300"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-700 block mb-1">Years Experience</Label>
-                    <Input
-                      type="number"
-                      value={content.yearsExperience}
-                      onChange={(e) => setContent({...content, yearsExperience: parseInt(e.target.value) || 0})}
-                      className="bg-white text-black border-gray-300"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-gray-700 block mb-1">Technologies Count</Label>
-                    <Input
-                      type="number"
-                      value={content.technologiesCount}
-                      onChange={(e) => setContent({...content, technologiesCount: parseInt(e.target.value) || 0})}
-                      className="bg-white text-black border-gray-300"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-                <Label className="text-black text-lg block mb-3">Contact Information</Label>
-                <div className="space-y-3">
-                  <Input
-                    placeholder="Email Address"
-                    value={content.contactEmail}
-                    onChange={(e) => setContent({...content, contactEmail: e.target.value})}
-                    className="bg-white text-black border-gray-300"
-                  />
-                  <Input
-                    placeholder="Phone Number"
-                    value={content.contactPhone}
-                    onChange={(e) => setContent({...content, contactPhone: e.target.value})}
-                    className="bg-white text-black border-gray-300"
-                  />
-                  <Input
-                    placeholder="Location"
-                    value={content.location}
-                    onChange={(e) => setContent({...content, location: e.target.value})}
-                    className="bg-white text-black border-gray-300"
-                  />
-                </div>
-              </div>
-
-              <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-                <Label className="text-black text-lg block mb-3">Social Media Links</Label>
-                <div className="space-y-3">
-                  <Input
-                    placeholder="GitHub URL"
-                    value={content.githubUrl}
-                    onChange={(e) => setContent({...content, githubUrl: e.target.value})}
-                    className="bg-white text-black border-gray-300"
-                  />
-                  <Input
-                    placeholder="LinkedIn URL"
-                    value={content.linkedinUrl}
-                    onChange={(e) => setContent({...content, linkedinUrl: e.target.value})}
-                    className="bg-white text-black border-gray-300"
-                  />
-                  <Input
-                    placeholder="Twitter URL"
-                    value={content.twitterUrl}
-                    onChange={(e) => setContent({...content, twitterUrl: e.target.value})}
-                    className="bg-white text-black border-gray-300"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
 
         {/* Save Button */}
         <div className="mt-6 pt-6 border-t border-gray-300">
