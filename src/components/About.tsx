@@ -6,35 +6,32 @@ import { usePortfolio } from '../contexts/PortfolioContext';
 export const About = () => {
   const { portfolioData } = usePortfolio();
 
-  const highlights = [
-    {
-      icon: <Code className="w-8 h-8" />,
-      title: "Full Stack Development",
-      description: "Expertise in modern web technologies and frameworks"
-    },
-    {
-      icon: <Lightbulb className="w-8 h-8" />,
-      title: "Innovation",
-      description: "Always exploring cutting-edge technologies and solutions"
-    },
-    {
-      icon: <Users className="w-8 h-8" />,
-      title: "Team Leadership",
-      description: "Leading teams to deliver exceptional results"
-    },
-    {
-      icon: <Award className="w-8 h-8" />,
-      title: "Recognition",
-      description: "Multiple hackathon wins and project accolades"
-    }
-  ];
-
   return (
     <section id="about" className="py-20 px-6 bg-white">
       <div className="container mx-auto max-w-6xl">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-black">
-          About <span className="bg-gradient-to-r from-gray-600 to-black bg-clip-text text-transparent">Kanukuntla Dheeraj</span>
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 text-black">
+          About <span className="bg-gradient-to-r from-gray-600 to-black bg-clip-text text-transparent">Me</span>
         </h2>
+        
+        {/* Animated Name */}
+        <div className="text-center mb-16">
+          <div className="text-5xl md:text-7xl font-extrabold tracking-wider">
+            {'DHEERAJ KANUKUNTLA'.split('').map((letter, index) => (
+              <span
+                key={index}
+                className={`inline-block bg-gradient-to-r from-gray-800 to-black bg-clip-text text-transparent animate-float ${
+                  letter === ' ' ? 'w-4' : ''
+                }`}
+                style={{
+                  animationDelay: `${index * 0.1}s`,
+                  fontFamily: "'Playfair Display', serif"
+                }}
+              >
+                {letter === ' ' ? '\u00A0' : letter}
+              </span>
+            ))}
+          </div>
+        </div>
         
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div className="space-y-6">
@@ -80,13 +77,13 @@ export const About = () => {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {highlights.map((item, index) => (
+          {portfolioData.highlights.map((item, index) => (
             <div
               key={index}
               className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group"
             >
               <div className="text-black mb-4 group-hover:scale-110 transition-transform duration-300">
-                {item.icon}
+                <div className="w-8 h-8" dangerouslySetInnerHTML={{ __html: item.icon }} />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-black">{item.title}</h3>
               <p className="text-gray-700">{item.description}</p>

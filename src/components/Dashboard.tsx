@@ -15,28 +15,33 @@ export const Dashboard = () => {
   
   // Login state
   const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [resetEmail, setResetEmail] = useState('');
   
   const { toast } = useToast();
-  const { portfolioData, updateProjects, updateSkills, updateExperiences, updateGallery, updateContent, saveChanges } = usePortfolio();
+  const { portfolioData, updateProjects, updateSkills, updateExperiences, updateGallery, updateHighlights, updateContent, saveChanges } = usePortfolio();
 
-  // Hardcoded credentials
+  // Store password in localStorage for persistence
+  const [adminPassword, setAdminPassword] = useState(() => {
+    return localStorage.getItem('adminPassword') || 'Dheeraj@2004';
+  });
   const ADMIN_USERNAME = 'Kanukuntla Dheeraj';
-  const ADMIN_PASSWORD = 'Dheeraj@2004';
 
-  // Local state for editing - this will be synced with portfolio data
+  // Local state for editing
   const [projects, setProjects] = useState(portfolioData.projects);
   const [skills, setSkills] = useState(portfolioData.skills);
   const [experiences, setExperiences] = useState(portfolioData.experiences);
   const [gallery, setGallery] = useState(portfolioData.gallery);
+  const [highlights, setHighlights] = useState(portfolioData.highlights);
   const [content, setContent] = useState(portfolioData.content);
 
   const [newProject, setNewProject] = useState({ title: '', description: '', tech: '', image: '', github: '', live: '', featured: false });
   const [newSkill, setNewSkill] = useState({ name: '', level: 50 });
   const [newExperience, setNewExperience] = useState({ title: '', company: '', period: '', description: '' });
   const [newGalleryItem, setNewGalleryItem] = useState({ src: '', title: '', category: '' });
+  const [newHighlight, setNewHighlight] = useState({ icon: '', title: '', description: '' });
   const [newTechnology, setNewTechnology] = useState('');
 
   // Update local state when portfolio data changes
@@ -46,11 +51,12 @@ export const Dashboard = () => {
     setSkills(portfolioData.skills);
     setExperiences(portfolioData.experiences);
     setGallery(portfolioData.gallery);
+    setHighlights(portfolioData.highlights);
     setContent(portfolioData.content);
   }, [portfolioData]);
 
   const handleLogin = () => {
-    if (loginData.username === ADMIN_USERNAME && loginData.password === ADMIN_PASSWORD) {
+    if (loginData.username === ADMIN_USERNAME && loginData.password === adminPassword) {
       setIsLoggedIn(true);
       setLoginData({ username: '', password: '' });
       toast({
@@ -68,21 +74,15 @@ export const Dashboard = () => {
 
   const handleSaveChanges = () => {
     console.log('Saving changes...');
-    console.log('Current local state:', { projects, skills, experiences, gallery, content });
     
-    // Update the context with current local state
     updateProjects(projects);
     updateSkills(skills);
     updateExperiences(experiences);
     updateGallery(gallery);
+    updateHighlights(highlights);
     updateContent(content);
     
-    // Save to localStorage immediately after updating context
     setTimeout(() => {
-      const finalData = { projects, skills, experiences, gallery, content };
-      localStorage.setItem('portfolioData', JSON.stringify(finalData));
-      console.log('Portfolio data saved manually:', finalData);
-      
       toast({
         title: "Success",
         description: "All changes have been saved successfully!",
@@ -91,23 +91,45 @@ export const Dashboard = () => {
   };
 
   const handleForgotPassword = () => {
-    if (resetEmail) {
+    if (resetEmail === content.contactEmail) {
+      // Simulate sending reset email
+      const tempPassword = 'TempPass123';
+      setAdminPassword(tempPassword);
+      localStorage.setItem('adminPassword', tempPassword);
       toast({
         title: "Password Reset",
-        description: "Password reset instructions sent to your email!",
+        description: `Temporary password: ${tempPassword}. Please change it immediately.`,
       });
       setShowForgotPassword(false);
       setResetEmail('');
+    } else {
+      toast({
+        title: "Error",
+        description: "Email not found in our records",
+        variant: "destructive",
+      });
     }
   };
 
   const handleChangePassword = () => {
+    if (currentPassword !== adminPassword) {
+      toast({
+        title: "Error",
+        description: "Current password is incorrect",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (newPassword === confirmPassword && newPassword.length >= 6) {
+      setAdminPassword(newPassword);
+      localStorage.setItem('adminPassword', newPassword);
       toast({
         title: "Success",
         description: "Password changed successfully!",
       });
       setShowChangePassword(false);
+      setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } else {
@@ -144,12 +166,37 @@ export const Dashboard = () => {
     }
   };
 
+  const handleResumeUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const updatedContent = {...content, resumeFile: reader.result as string};
+        setContent(updatedContent);
+        toast({
+          title: "Success",
+          description: "Resume uploaded successfully! Don't forget to save changes.",
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const addProject = () => {
     if (newProject.title && newProject.description) {
       const updatedProjects = [...projects, { ...newProject, id: Date.now() }];
       setProjects(updatedProjects);
       setNewProject({ title: '', description: '', tech: '', image: '', github: '', live: '', featured: false });
       toast({ title: "Success", description: "Project added successfully! Don't forget to save changes." });
+    }
+  };
+
+  const addHighlight = () => {
+    if (newHighlight.title && newHighlight.description) {
+      const updatedHighlights = [...highlights, { ...newHighlight, id: Date.now() }];
+      setHighlights(updatedHighlights);
+      setNewHighlight({ icon: '', title: '', description: '' });
+      toast({ title: "Success", description: "Highlight card added successfully! Don't forget to save changes." });
     }
   };
 
@@ -193,6 +240,12 @@ export const Dashboard = () => {
     const updatedProjects = projects.filter(p => p.id !== id);
     setProjects(updatedProjects);
     toast({ title: "Deleted", description: "Project removed successfully! Don't forget to save changes." });
+  };
+
+  const removeHighlight = (id: number) => {
+    const updatedHighlights = highlights.filter(h => h.id !== id);
+    setHighlights(updatedHighlights);
+    toast({ title: "Deleted", description: "Highlight card removed successfully! Don't forget to save changes." });
   };
 
   const removeSkill = (id: number) => {
@@ -335,6 +388,18 @@ export const Dashboard = () => {
           ) : (
             <div className="space-y-6">
               <div>
+                <Label htmlFor="currentPassword" className="text-black">Current Password</Label>
+                <Input
+                  id="currentPassword"
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="mt-2 bg-gray-100 text-black border-gray-300"
+                  placeholder="Enter current password"
+                />
+              </div>
+
+              <div>
                 <Label htmlFor="newPassword" className="text-black">New Password</Label>
                 <Input
                   id="newPassword"
@@ -401,7 +466,7 @@ export const Dashboard = () => {
 
         {/* Tabs */}
         <div className="flex space-x-4 mb-6 overflow-x-auto">
-          {['projects', 'skills', 'experience', 'gallery', 'technologies', 'profile', 'content'].map((tab) => (
+          {['projects', 'highlights', 'skills', 'experience', 'gallery', 'technologies', 'profile', 'content'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -478,31 +543,84 @@ export const Dashboard = () => {
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project) => (
-                <div key={project.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
+                <div key={project.id} className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
                       <h5 className="text-black font-medium">{project.title}</h5>
                       {project.featured && <Star size={16} className="text-yellow-500 fill-current" />}
+                    </div>
+                    <div className="flex gap-2">
                       <button
                         onClick={() => toggleProjectFeatured(project.id)}
-                        className="text-gray-600 hover:text-black"
+                        className="text-gray-600 hover:text-yellow-500"
                       >
                         <Star size={16} className={project.featured ? "text-yellow-500 fill-current" : ""} />
                       </button>
+                      <button
+                        onClick={() => removeProject(project.id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
-                    <p className="text-gray-600 mb-1">{project.description}</p>
-                    <p className="text-gray-800 text-sm mb-1">Tech: {project.tech}</p>
-                    {project.github && <p className="text-gray-600 text-sm">GitHub: {project.github}</p>}
-                    {project.live && <p className="text-gray-600 text-sm">Live: {project.live}</p>}
                   </div>
-                  <button
-                    onClick={() => removeProject(project.id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  <p className="text-gray-600 text-sm mb-2">{project.description}</p>
+                  <p className="text-gray-800 text-xs">Tech: {project.tech}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Highlights Tab */}
+        {activeTab === 'highlights' && (
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold text-black">Manage Highlight Cards</h3>
+            
+            <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+              <h4 className="text-lg font-medium text-black mb-4">Add New Highlight Card</h4>
+              <div className="space-y-3">
+                <Input
+                  placeholder="Card Title"
+                  value={newHighlight.title}
+                  onChange={(e) => setNewHighlight({...newHighlight, title: e.target.value})}
+                  className="bg-white text-black border-gray-300"
+                />
+                <textarea
+                  placeholder="Card Description"
+                  value={newHighlight.description}
+                  onChange={(e) => setNewHighlight({...newHighlight, description: e.target.value})}
+                  className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
+                  rows={3}
+                />
+                <Input
+                  placeholder="SVG Icon Code (optional)"
+                  value={newHighlight.icon}
+                  onChange={(e) => setNewHighlight({...newHighlight, icon: e.target.value})}
+                  className="bg-white text-black border-gray-300"
+                />
+                <Button onClick={addHighlight} className="bg-black hover:bg-gray-800 text-white">
+                  <Plus size={16} className="mr-2" />
+                  Add Highlight Card
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {highlights.map((highlight) => (
+                <div key={highlight.id} className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                  <div className="flex justify-between items-start mb-2">
+                    <h5 className="text-black font-medium">{highlight.title}</h5>
+                    <button
+                      onClick={() => removeHighlight(highlight.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                  <p className="text-gray-600 text-sm">{highlight.description}</p>
                 </div>
               ))}
             </div>
@@ -637,6 +755,30 @@ export const Dashboard = () => {
                   <p className="text-gray-600 text-sm mt-2">
                     Recommended: Square image, at least 200x200px
                   </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-100 p-6 rounded-lg border border-gray-300">
+              <h4 className="text-lg font-medium text-black mb-4">Resume Upload</h4>
+              <div className="flex items-center gap-6">
+                <div className="flex-1">
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleResumeUpload}
+                    className="hidden"
+                    id="resumeInput"
+                  />
+                  <Label htmlFor="resumeInput" className="cursor-pointer">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white transition-colors">
+                      <Upload size={16} />
+                      Upload Resume
+                    </div>
+                  </Label>
+                  {content.resumeFile && (
+                    <p className="text-green-600 text-sm mt-2">✓ Resume uploaded successfully</p>
+                  )}
                 </div>
               </div>
             </div>

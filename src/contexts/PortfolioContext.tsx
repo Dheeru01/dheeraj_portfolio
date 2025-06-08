@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface Project {
@@ -32,11 +33,19 @@ interface GalleryItem {
   category: string;
 }
 
+interface Highlight {
+  id: number;
+  icon: string;
+  title: string;
+  description: string;
+}
+
 interface Content {
   aboutText: string;
   contactEmail: string;
   contactPhone: string;
   profileImage: string;
+  resumeFile: string;
   technologies: string[];
   projectsCompleted: number;
   yearsExperience: number;
@@ -52,6 +61,7 @@ interface PortfolioData {
   skills: Skill[];
   experiences: Experience[];
   gallery: GalleryItem[];
+  highlights: Highlight[];
   content: Content;
 }
 
@@ -61,6 +71,7 @@ interface PortfolioContextType {
   updateSkills: (skills: Skill[]) => void;
   updateExperiences: (experiences: Experience[]) => void;
   updateGallery: (gallery: GalleryItem[]) => void;
+  updateHighlights: (highlights: Highlight[]) => void;
   updateContent: (content: Content) => void;
   saveChanges: () => void;
 }
@@ -110,11 +121,38 @@ const defaultData: PortfolioData = {
       category: "Team"
     }
   ],
+  highlights: [
+    {
+      id: 1,
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+      title: "Full Stack Development",
+      description: "Expertise in modern web technologies and frameworks"
+    },
+    {
+      id: 2,
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="m9 9.5c-1 0-2.5-.8-2.5-2.5a4.5 4.5 0 0 1 5.5-4.4"/><path d="m9 14.5c1 0 2.5.8 2.5 2.5a4.5 4.5 0 0 1-5.5 4.4"/></svg>',
+      title: "Innovation",
+      description: "Always exploring cutting-edge technologies and solutions"
+    },
+    {
+      id: 3,
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m22 21-3-3m0 0-3-3m3 3 3 3m-3-3-3 3"/></svg>',
+      title: "Team Leadership",
+      description: "Leading teams to deliver exceptional results"
+    },
+    {
+      id: 4,
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>',
+      title: "Recognition",
+      description: "Multiple hackathon wins and project accolades"
+    }
+  ],
   content: {
     aboutText: 'Passionate software developer with expertise in modern web technologies...',
     contactEmail: 'kanukuntladheeraj@gmail.com',
     contactPhone: '+1 (555) 123-4567',
     profileImage: '',
+    resumeFile: '',
     technologies: ['React', 'Vue.js', 'Angular', 'Node.js', 'Express', 'Python', 'Django', 'Flask', 'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'AWS', 'Docker', 'Kubernetes', 'Git'],
     projectsCompleted: 50,
     yearsExperience: 5,
@@ -136,18 +174,19 @@ export const usePortfolio = () => {
   return context;
 };
 
-// Helper function to ensure data structure integrity
 const ensureDataStructure = (data: any): PortfolioData => {
   return {
     projects: Array.isArray(data?.projects) ? data.projects : defaultData.projects,
     skills: Array.isArray(data?.skills) ? data.skills : defaultData.skills,
     experiences: Array.isArray(data?.experiences) ? data.experiences : defaultData.experiences,
     gallery: Array.isArray(data?.gallery) ? data.gallery : defaultData.gallery,
+    highlights: Array.isArray(data?.highlights) ? data.highlights : defaultData.highlights,
     content: {
       aboutText: data?.content?.aboutText || defaultData.content.aboutText,
       contactEmail: data?.content?.contactEmail || defaultData.content.contactEmail,
       contactPhone: data?.content?.contactPhone || defaultData.content.contactPhone,
       profileImage: data?.content?.profileImage || defaultData.content.profileImage,
+      resumeFile: data?.content?.resumeFile || defaultData.content.resumeFile,
       technologies: Array.isArray(data?.content?.technologies) ? data.content.technologies : defaultData.content.technologies,
       projectsCompleted: data?.content?.projectsCompleted || defaultData.content.projectsCompleted,
       yearsExperience: data?.content?.yearsExperience || defaultData.content.yearsExperience,
@@ -163,7 +202,6 @@ const ensureDataStructure = (data: any): PortfolioData => {
 export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(defaultData);
 
-  // Load saved data from localStorage on component mount
   useEffect(() => {
     const savedData = localStorage.getItem('portfolioData');
     if (savedData) {
@@ -174,11 +212,19 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
         setPortfolioData(validatedData);
       } catch (error) {
         console.error('Error parsing saved portfolio data:', error);
-        // If there's an error, keep the default data
         setPortfolioData(defaultData);
       }
     }
   }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+      console.log('Portfolio data auto-saved:', portfolioData);
+    } catch (error) {
+      console.error('Error auto-saving portfolio data:', error);
+    }
+  }, [portfolioData]);
 
   const updateProjects = (projects: Project[]) => {
     console.log('Updating projects:', projects);
@@ -198,6 +244,11 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
   const updateGallery = (gallery: GalleryItem[]) => {
     console.log('Updating gallery:', gallery);
     setPortfolioData(prev => ({ ...prev, gallery }));
+  };
+
+  const updateHighlights = (highlights: Highlight[]) => {
+    console.log('Updating highlights:', highlights);
+    setPortfolioData(prev => ({ ...prev, highlights }));
   };
 
   const updateContent = (content: Content) => {
@@ -221,6 +272,7 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
       updateSkills,
       updateExperiences,
       updateGallery,
+      updateHighlights,
       updateContent,
       saveChanges
     }}>
