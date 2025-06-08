@@ -26,7 +26,7 @@ export const Dashboard = () => {
   const ADMIN_USERNAME = 'Kanukuntla Dheeraj';
   const ADMIN_PASSWORD = 'Dheeraj@2004';
 
-  // Local state for editing
+  // Local state for editing - this will be synced with portfolio data
   const [projects, setProjects] = useState(portfolioData.projects);
   const [skills, setSkills] = useState(portfolioData.skills);
   const [experiences, setExperiences] = useState(portfolioData.experiences);
@@ -41,6 +41,7 @@ export const Dashboard = () => {
 
   // Update local state when portfolio data changes
   useEffect(() => {
+    console.log('Portfolio data updated, syncing local state');
     setProjects(portfolioData.projects);
     setSkills(portfolioData.skills);
     setExperiences(portfolioData.experiences);
@@ -66,16 +67,24 @@ export const Dashboard = () => {
   };
 
   const handleSaveChanges = () => {
+    console.log('Saving changes...');
+    console.log('Current local state:', { projects, skills, experiences, gallery, content });
+    
+    // Update the context with current local state
     updateProjects(projects);
     updateSkills(skills);
     updateExperiences(experiences);
     updateGallery(gallery);
     updateContent(content);
-    saveChanges();
-    toast({
-      title: "Success",
-      description: "All changes have been saved successfully!",
-    });
+    
+    // Save to localStorage
+    setTimeout(() => {
+      saveChanges();
+      toast({
+        title: "Success",
+        description: "All changes have been saved successfully!",
+      });
+    }, 100); // Small delay to ensure state updates are complete
   };
 
   const handleForgotPassword = () => {
@@ -121,10 +130,11 @@ export const Dashboard = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setContent({...content, profileImage: reader.result as string});
+        const updatedContent = {...content, profileImage: reader.result as string};
+        setContent(updatedContent);
         toast({
           title: "Success",
-          description: "Profile image updated successfully!",
+          description: "Profile image updated successfully! Don't forget to save changes.",
         });
       };
       reader.readAsDataURL(file);
@@ -133,71 +143,82 @@ export const Dashboard = () => {
 
   const addProject = () => {
     if (newProject.title && newProject.description) {
-      setProjects([...projects, { ...newProject, id: Date.now() }]);
+      const updatedProjects = [...projects, { ...newProject, id: Date.now() }];
+      setProjects(updatedProjects);
       setNewProject({ title: '', description: '', tech: '', image: '', github: '', live: '', featured: false });
-      toast({ title: "Success", description: "Project added successfully!" });
+      toast({ title: "Success", description: "Project added successfully! Don't forget to save changes." });
     }
   };
 
   const addSkill = () => {
     if (newSkill.name) {
-      setSkills([...skills, { ...newSkill, id: Date.now() }]);
+      const updatedSkills = [...skills, { ...newSkill, id: Date.now() }];
+      setSkills(updatedSkills);
       setNewSkill({ name: '', level: 50 });
-      toast({ title: "Success", description: "Skill added successfully!" });
+      toast({ title: "Success", description: "Skill added successfully! Don't forget to save changes." });
     }
   };
 
   const addExperience = () => {
     if (newExperience.title && newExperience.company) {
-      setExperiences([...experiences, { ...newExperience, id: Date.now() }]);
+      const updatedExperiences = [...experiences, { ...newExperience, id: Date.now() }];
+      setExperiences(updatedExperiences);
       setNewExperience({ title: '', company: '', period: '', description: '' });
-      toast({ title: "Success", description: "Experience added successfully!" });
+      toast({ title: "Success", description: "Experience added successfully! Don't forget to save changes." });
     }
   };
 
   const addGalleryItem = () => {
     if (newGalleryItem.src && newGalleryItem.title) {
-      setGallery([...gallery, { ...newGalleryItem, id: Date.now() }]);
+      const updatedGallery = [...gallery, { ...newGalleryItem, id: Date.now() }];
+      setGallery(updatedGallery);
       setNewGalleryItem({ src: '', title: '', category: '' });
-      toast({ title: "Success", description: "Gallery item added successfully!" });
+      toast({ title: "Success", description: "Gallery item added successfully! Don't forget to save changes." });
     }
   };
 
   const addTechnology = () => {
     if (newTechnology && !content.technologies.includes(newTechnology)) {
-      setContent({...content, technologies: [...content.technologies, newTechnology]});
+      const updatedContent = {...content, technologies: [...content.technologies, newTechnology]};
+      setContent(updatedContent);
       setNewTechnology('');
-      toast({ title: "Success", description: "Technology added successfully!" });
+      toast({ title: "Success", description: "Technology added successfully! Don't forget to save changes." });
     }
   };
 
   const removeProject = (id: number) => {
-    setProjects(projects.filter(p => p.id !== id));
-    toast({ title: "Deleted", description: "Project removed successfully!" });
+    const updatedProjects = projects.filter(p => p.id !== id);
+    setProjects(updatedProjects);
+    toast({ title: "Deleted", description: "Project removed successfully! Don't forget to save changes." });
   };
 
   const removeSkill = (id: number) => {
-    setSkills(skills.filter(s => s.id !== id));
-    toast({ title: "Deleted", description: "Skill removed successfully!" });
+    const updatedSkills = skills.filter(s => s.id !== id);
+    setSkills(updatedSkills);
+    toast({ title: "Deleted", description: "Skill removed successfully! Don't forget to save changes." });
   };
 
   const removeExperience = (id: number) => {
-    setExperiences(experiences.filter(e => e.id !== id));
-    toast({ title: "Deleted", description: "Experience removed successfully!" });
+    const updatedExperiences = experiences.filter(e => e.id !== id);
+    setExperiences(updatedExperiences);
+    toast({ title: "Deleted", description: "Experience removed successfully! Don't forget to save changes." });
   };
 
   const removeGalleryItem = (id: number) => {
-    setGallery(gallery.filter(g => g.id !== id));
-    toast({ title: "Deleted", description: "Gallery item removed successfully!" });
+    const updatedGallery = gallery.filter(g => g.id !== id);
+    setGallery(updatedGallery);
+    toast({ title: "Deleted", description: "Gallery item removed successfully! Don't forget to save changes." });
   };
 
   const removeTechnology = (tech: string) => {
-    setContent({...content, technologies: content.technologies.filter(t => t !== tech)});
-    toast({ title: "Deleted", description: "Technology removed successfully!" });
+    const updatedContent = {...content, technologies: content.technologies.filter(t => t !== tech)};
+    setContent(updatedContent);
+    toast({ title: "Deleted", description: "Technology removed successfully! Don't forget to save changes." });
   };
 
   const toggleProjectFeatured = (id: number) => {
-    setProjects(projects.map(p => p.id === id ? {...p, featured: !p.featured} : p));
+    const updatedProjects = projects.map(p => p.id === id ? {...p, featured: !p.featured} : p);
+    setProjects(updatedProjects);
   };
 
   if (!isVisible) {

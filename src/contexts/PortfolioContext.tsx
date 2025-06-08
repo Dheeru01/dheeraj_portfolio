@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface Project {
   id: number;
@@ -126,29 +125,53 @@ export const usePortfolio = () => {
 export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(defaultData);
 
+  // Load saved data from localStorage on component mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('portfolioData');
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        console.log('Loading saved portfolio data:', parsedData);
+        setPortfolioData(parsedData);
+      } catch (error) {
+        console.error('Error parsing saved portfolio data:', error);
+        // If there's an error, keep the default data
+      }
+    }
+  }, []);
+
   const updateProjects = (projects: Project[]) => {
+    console.log('Updating projects:', projects);
     setPortfolioData(prev => ({ ...prev, projects }));
   };
 
   const updateSkills = (skills: Skill[]) => {
+    console.log('Updating skills:', skills);
     setPortfolioData(prev => ({ ...prev, skills }));
   };
 
   const updateExperiences = (experiences: Experience[]) => {
+    console.log('Updating experiences:', experiences);
     setPortfolioData(prev => ({ ...prev, experiences }));
   };
 
   const updateGallery = (gallery: GalleryItem[]) => {
+    console.log('Updating gallery:', gallery);
     setPortfolioData(prev => ({ ...prev, gallery }));
   };
 
   const updateContent = (content: Content) => {
+    console.log('Updating content:', content);
     setPortfolioData(prev => ({ ...prev, content }));
   };
 
   const saveChanges = () => {
-    localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
-    console.log('Portfolio data saved:', portfolioData);
+    try {
+      localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+      console.log('Portfolio data saved successfully:', portfolioData);
+    } catch (error) {
+      console.error('Error saving portfolio data:', error);
+    }
   };
 
   return (
