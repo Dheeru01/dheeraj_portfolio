@@ -122,6 +122,23 @@ export const usePortfolio = () => {
   return context;
 };
 
+// Helper function to ensure data structure integrity
+const ensureDataStructure = (data: any): PortfolioData => {
+  return {
+    projects: Array.isArray(data?.projects) ? data.projects : defaultData.projects,
+    skills: Array.isArray(data?.skills) ? data.skills : defaultData.skills,
+    experiences: Array.isArray(data?.experiences) ? data.experiences : defaultData.experiences,
+    gallery: Array.isArray(data?.gallery) ? data.gallery : defaultData.gallery,
+    content: {
+      aboutText: data?.content?.aboutText || defaultData.content.aboutText,
+      contactEmail: data?.content?.contactEmail || defaultData.content.contactEmail,
+      contactPhone: data?.content?.contactPhone || defaultData.content.contactPhone,
+      profileImage: data?.content?.profileImage || defaultData.content.profileImage,
+      technologies: Array.isArray(data?.content?.technologies) ? data.content.technologies : defaultData.content.technologies
+    }
+  };
+};
+
 export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(defaultData);
 
@@ -132,10 +149,12 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
       try {
         const parsedData = JSON.parse(savedData);
         console.log('Loading saved portfolio data:', parsedData);
-        setPortfolioData(parsedData);
+        const validatedData = ensureDataStructure(parsedData);
+        setPortfolioData(validatedData);
       } catch (error) {
         console.error('Error parsing saved portfolio data:', error);
         // If there's an error, keep the default data
+        setPortfolioData(defaultData);
       }
     }
   }, []);

@@ -6,7 +6,9 @@ import { usePortfolio } from '../contexts/PortfolioContext';
 export const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const { portfolioData } = usePortfolio();
-  const { gallery } = portfolioData;
+  
+  // Safe access to gallery with fallback
+  const gallery = portfolioData?.gallery || [];
 
   return (
     <section id="gallery" className="py-20 px-6 bg-gray-50">
