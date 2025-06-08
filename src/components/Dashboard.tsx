@@ -77,14 +77,17 @@ export const Dashboard = () => {
     updateGallery(gallery);
     updateContent(content);
     
-    // Save to localStorage
+    // Save to localStorage immediately after updating context
     setTimeout(() => {
-      saveChanges();
+      const finalData = { projects, skills, experiences, gallery, content };
+      localStorage.setItem('portfolioData', JSON.stringify(finalData));
+      console.log('Portfolio data saved manually:', finalData);
+      
       toast({
         title: "Success",
         description: "All changes have been saved successfully!",
       });
-    }, 100); // Small delay to ensure state updates are complete
+    }, 100);
   };
 
   const handleForgotPassword = () => {
@@ -778,6 +781,39 @@ export const Dashboard = () => {
               </div>
 
               <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                <Label className="text-black text-lg block mb-3">About Section Stats</Label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div>
+                    <Label className="text-gray-700 block mb-1">Projects Completed</Label>
+                    <Input
+                      type="number"
+                      value={content.projectsCompleted}
+                      onChange={(e) => setContent({...content, projectsCompleted: parseInt(e.target.value) || 0})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-700 block mb-1">Years Experience</Label>
+                    <Input
+                      type="number"
+                      value={content.yearsExperience}
+                      onChange={(e) => setContent({...content, yearsExperience: parseInt(e.target.value) || 0})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-700 block mb-1">Technologies Count</Label>
+                    <Input
+                      type="number"
+                      value={content.technologiesCount}
+                      onChange={(e) => setContent({...content, technologiesCount: parseInt(e.target.value) || 0})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
                 <Label className="text-black text-lg block mb-3">Contact Information</Label>
                 <div className="space-y-3">
                   <Input
@@ -790,6 +826,36 @@ export const Dashboard = () => {
                     placeholder="Phone Number"
                     value={content.contactPhone}
                     onChange={(e) => setContent({...content, contactPhone: e.target.value})}
+                    className="bg-white text-black border-gray-300"
+                  />
+                  <Input
+                    placeholder="Location"
+                    value={content.location}
+                    onChange={(e) => setContent({...content, location: e.target.value})}
+                    className="bg-white text-black border-gray-300"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                <Label className="text-black text-lg block mb-3">Social Media Links</Label>
+                <div className="space-y-3">
+                  <Input
+                    placeholder="GitHub URL"
+                    value={content.githubUrl}
+                    onChange={(e) => setContent({...content, githubUrl: e.target.value})}
+                    className="bg-white text-black border-gray-300"
+                  />
+                  <Input
+                    placeholder="LinkedIn URL"
+                    value={content.linkedinUrl}
+                    onChange={(e) => setContent({...content, linkedinUrl: e.target.value})}
+                    className="bg-white text-black border-gray-300"
+                  />
+                  <Input
+                    placeholder="Twitter URL"
+                    value={content.twitterUrl}
+                    onChange={(e) => setContent({...content, twitterUrl: e.target.value})}
                     className="bg-white text-black border-gray-300"
                   />
                 </div>

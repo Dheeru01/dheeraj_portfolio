@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface Project {
@@ -39,6 +38,13 @@ interface Content {
   contactPhone: string;
   profileImage: string;
   technologies: string[];
+  projectsCompleted: number;
+  yearsExperience: number;
+  technologiesCount: number;
+  location: string;
+  githubUrl: string;
+  linkedinUrl: string;
+  twitterUrl: string;
 }
 
 interface PortfolioData {
@@ -109,7 +115,14 @@ const defaultData: PortfolioData = {
     contactEmail: 'kanukuntladheeraj@gmail.com',
     contactPhone: '+1 (555) 123-4567',
     profileImage: '',
-    technologies: ['React', 'Vue.js', 'Angular', 'Node.js', 'Express', 'Python', 'Django', 'Flask', 'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'AWS', 'Docker', 'Kubernetes', 'Git']
+    technologies: ['React', 'Vue.js', 'Angular', 'Node.js', 'Express', 'Python', 'Django', 'Flask', 'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'AWS', 'Docker', 'Kubernetes', 'Git'],
+    projectsCompleted: 50,
+    yearsExperience: 5,
+    technologiesCount: 20,
+    location: 'San Francisco, CA',
+    githubUrl: 'https://github.com',
+    linkedinUrl: 'https://linkedin.com',
+    twitterUrl: 'https://twitter.com'
   }
 };
 
@@ -135,7 +148,14 @@ const ensureDataStructure = (data: any): PortfolioData => {
       contactEmail: data?.content?.contactEmail || defaultData.content.contactEmail,
       contactPhone: data?.content?.contactPhone || defaultData.content.contactPhone,
       profileImage: data?.content?.profileImage || defaultData.content.profileImage,
-      technologies: Array.isArray(data?.content?.technologies) ? data.content.technologies : defaultData.content.technologies
+      technologies: Array.isArray(data?.content?.technologies) ? data.content.technologies : defaultData.content.technologies,
+      projectsCompleted: data?.content?.projectsCompleted || defaultData.content.projectsCompleted,
+      yearsExperience: data?.content?.yearsExperience || defaultData.content.yearsExperience,
+      technologiesCount: data?.content?.technologiesCount || defaultData.content.technologiesCount,
+      location: data?.content?.location || defaultData.content.location,
+      githubUrl: data?.content?.githubUrl || defaultData.content.githubUrl,
+      linkedinUrl: data?.content?.linkedinUrl || defaultData.content.linkedinUrl,
+      twitterUrl: data?.content?.twitterUrl || defaultData.content.twitterUrl
     }
   };
 };
@@ -159,16 +179,6 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
       }
     }
   }, []);
-
-  // Auto-save to localStorage whenever portfolioData changes
-  useEffect(() => {
-    try {
-      localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
-      console.log('Portfolio data auto-saved:', portfolioData);
-    } catch (error) {
-      console.error('Error auto-saving portfolio data:', error);
-    }
-  }, [portfolioData]);
 
   const updateProjects = (projects: Project[]) => {
     console.log('Updating projects:', projects);

@@ -33,7 +33,7 @@ export const About = () => {
     <section id="about" className="py-20 px-6 bg-white">
       <div className="container mx-auto max-w-6xl">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-black">
-          About <span className="bg-gradient-to-r from-gray-600 to-black bg-clip-text text-transparent">Me</span>
+          About <span className="bg-gradient-to-r from-gray-600 to-black bg-clip-text text-transparent">Kanukuntla Dheeraj</span>
         </h2>
         
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
@@ -48,15 +48,15 @@ export const About = () => {
             </p>
             <div className="flex gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-black">50+</div>
+                <div className="text-3xl font-bold text-black">{portfolioData.content.projectsCompleted}+</div>
                 <div className="text-sm text-gray-600">Projects Completed</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-black">5+</div>
+                <div className="text-3xl font-bold text-black">{portfolioData.content.yearsExperience}+</div>
                 <div className="text-sm text-gray-600">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-black">20+</div>
+                <div className="text-3xl font-bold text-black">{portfolioData.content.technologiesCount}+</div>
                 <div className="text-sm text-gray-600">Technologies</div>
               </div>
             </div>

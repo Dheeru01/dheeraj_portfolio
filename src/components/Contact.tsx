@@ -70,7 +70,7 @@ export const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-black">Location</h4>
-                  <p className="text-gray-700">San Francisco, CA</p>
+                  <p className="text-gray-700">{portfolioData.content.location}</p>
                 </div>
               </div>
             </div>
@@ -80,19 +80,25 @@ export const Contact = () => {
               <h4 className="font-semibold mb-4 text-black">Follow Me</h4>
               <div className="flex gap-4">
                 <a
-                  href="#"
+                  href={portfolioData.content.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-300"
                 >
                   <Github size={20} className="text-black" />
                 </a>
                 <a
-                  href="#"
+                  href={portfolioData.content.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-300"
                 >
                   <Linkedin size={20} className="text-black" />
                 </a>
                 <a
-                  href="#"
+                  href={portfolioData.content.twitterUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-300"
                 >
                   <Twitter size={20} className="text-black" />
