@@ -13,25 +13,7 @@ export const About = () => {
           About <span className="bg-gradient-to-r from-gray-600 to-black bg-clip-text text-transparent">Me</span>
         </h2>
         
-        {/* Animated Name */}
-        <div className="text-center mb-16">
-          <div className="text-5xl md:text-7xl font-extrabold tracking-wider">
-            {'DHEERAJ KANUKUNTLA'.split('').map((letter, index) => (
-              <span
-                key={index}
-                className={`inline-block bg-gradient-to-r from-gray-800 to-black bg-clip-text text-transparent animate-float ${
-                  letter === ' ' ? 'w-4' : ''
-                }`}
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                  fontFamily: "'Playfair Display', serif"
-                }}
-              >
-                {letter === ' ' ? '\u00A0' : letter}
-              </span>
-            ))}
-          </div>
-        </div>
+        
         
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div className="space-y-6">
