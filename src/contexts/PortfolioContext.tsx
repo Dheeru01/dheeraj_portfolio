@@ -46,6 +46,7 @@ interface Content {
   contactPhone: string;
   profileImage: string;
   resumeFile: string;
+  cvFile: string;
   technologies: string[];
   projectsCompleted: number;
   yearsExperience: number;
@@ -153,6 +154,7 @@ const defaultData: PortfolioData = {
     contactPhone: '+1 (555) 123-4567',
     profileImage: '',
     resumeFile: '',
+    cvFile: '',
     technologies: ['React', 'Vue.js', 'Angular', 'Node.js', 'Express', 'Python', 'Django', 'Flask', 'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'AWS', 'Docker', 'Kubernetes', 'Git'],
     projectsCompleted: 50,
     yearsExperience: 5,
@@ -187,6 +189,7 @@ const ensureDataStructure = (data: any): PortfolioData => {
       contactPhone: data?.content?.contactPhone || defaultData.content.contactPhone,
       profileImage: data?.content?.profileImage || defaultData.content.profileImage,
       resumeFile: data?.content?.resumeFile || defaultData.content.resumeFile,
+      cvFile: data?.content?.cvFile || defaultData.content.cvFile,
       technologies: Array.isArray(data?.content?.technologies) ? data.content.technologies : defaultData.content.technologies,
       projectsCompleted: data?.content?.projectsCompleted || defaultData.content.projectsCompleted,
       yearsExperience: data?.content?.yearsExperience || defaultData.content.yearsExperience,

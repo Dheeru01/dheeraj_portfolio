@@ -19,11 +19,11 @@ export const Projects = () => {
         
         {featuredProjects.length > 0 && (
           <div className="mb-16">
-            <div className="grid lg:grid-cols-2 gap-8 auto-rows-fr">
+            <div className="grid lg:grid-cols-2 gap-8">
               {featuredProjects.map((project, index) => (
                 <div
                   key={project.id}
-                  className="group bg-gray-50 hover:bg-gray-100 rounded-2xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-500 hover:scale-105 hover:shadow-2xl animate-fade-in flex flex-col"
+                  className="group bg-gray-50 hover:bg-gray-100 rounded-2xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-500 hover:scale-105 hover:shadow-2xl animate-fade-in flex flex-col h-full"
                   style={{ animationDelay: `${index * 0.2}s` }}
                 >
                   <div className="relative overflow-hidden">
@@ -78,11 +78,11 @@ export const Projects = () => {
         )}
         
         {otherProjects.length > 0 && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {otherProjects.map((project, index) => (
               <div
                 key={project.id}
-                className="group bg-gray-50 hover:bg-gray-100 rounded-xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:shadow-lg animate-fade-in flex flex-col"
+                className="group bg-gray-50 hover:bg-gray-100 rounded-xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:shadow-lg animate-fade-in flex flex-col h-full"
                 style={{ animationDelay: `${(featuredProjects.length + index) * 0.1}s` }}
               >
                 <div className="relative overflow-hidden">

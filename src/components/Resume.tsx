@@ -31,6 +31,21 @@ export const Resume = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    } else {
+      alert('Resume file not uploaded yet. Please use the dashboard to upload your resume.');
+    }
+  };
+
+  const handleDownloadCV = () => {
+    if (portfolioData.content.cvFile) {
+      const link = document.createElement('a');
+      link.href = portfolioData.content.cvFile;
+      link.download = 'Dheeraj_Kanukuntla_CV.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      alert('CV file not uploaded yet. Please use the dashboard to upload your CV.');
     }
   };
 
@@ -41,7 +56,7 @@ export const Resume = () => {
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">
             My <span className="bg-gradient-to-r from-gray-600 to-black bg-clip-text text-transparent">Resume</span>
           </h2>
-          {portfolioData.content.resumeFile && (
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
               onClick={handleDownloadResume}
               className="inline-flex items-center gap-2 px-6 py-3 bg-black rounded-full text-white font-semibold hover:bg-gray-800 transition-colors duration-300"
@@ -49,7 +64,14 @@ export const Resume = () => {
               <Download size={20} />
               Download Resume
             </button>
-          )}
+            <button 
+              onClick={handleDownloadCV}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gray-700 rounded-full text-white font-semibold hover:bg-gray-600 transition-colors duration-300"
+            >
+              <Download size={20} />
+              Download CV
+            </button>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">

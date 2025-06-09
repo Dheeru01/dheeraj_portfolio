@@ -406,7 +406,7 @@ export const Dashboard = () => {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Resume File</label>
+                <label className="block text-sm font-medium mb-1">Resume File (PDF)</label>
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx"
@@ -416,6 +416,20 @@ export const Dashboard = () => {
                 {content.resumeFile && (
                   <div className="mt-2">
                     <span className="text-sm text-green-600">Resume uploaded successfully!</span>
+                  </div>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">CV File (PDF)</label>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => handleFileUpload(e, 'cvFile')}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                />
+                {content.cvFile && (
+                  <div className="mt-2">
+                    <span className="text-sm text-green-600">CV uploaded successfully!</span>
                   </div>
                 )}
               </div>
