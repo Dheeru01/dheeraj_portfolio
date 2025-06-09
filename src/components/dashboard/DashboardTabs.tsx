@@ -17,7 +17,7 @@ export const DashboardTabs = () => {
     { 
       id: 'education', 
       label: 'Education', 
-      component: () => <EducationTab education={portfolioData.education} setEducation={updateEducation} />
+      component: () => <EducationTab />
     },
     { id: 'skills', label: 'Skills', component: () => <div className="p-4">Skills management coming soon...</div> },
     { id: 'experience', label: 'Experience', component: () => <div className="p-4">Experience management coming soon...</div> },
