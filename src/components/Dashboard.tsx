@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DashboardLogin } from './dashboard/DashboardLogin';
 import { DashboardTabs } from './dashboard/DashboardTabs';
@@ -8,16 +7,28 @@ import { usePortfolio } from '../contexts/PortfolioContext';
 export const Dashboard = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState('projects');
-  const { portfolioData, updateSkills, updateExperiences, updateGallery, updateHighlights, updateContent } = usePortfolio();
+  const [adminPassword, setAdminPassword] = useState(
+    localStorage.getItem('adminPassword') || 'admin123'
+  );
+  const { portfolioData, updateSkills, updateExperiences, updateGallery, updateHighlights, updateContent, updateProjects } = usePortfolio();
 
   const [skills, setSkills] = useState(portfolioData.skills);
   const [experiences, setExperiences] = useState(portfolioData.experiences);
   const [gallery, setGallery] = useState(portfolioData.gallery);
   const [highlights, setHighlights] = useState(portfolioData.highlights);
   const [content, setContent] = useState(portfolioData.content);
+  const [projects, setProjects] = useState(portfolioData.projects);
 
   if (!isLoggedIn) {
-    return <DashboardLogin onLogin={setIsLoggedIn} />;
+    return (
+      <DashboardLogin 
+        onLogin={() => setIsLoggedIn(true)} 
+        onClose={() => {}} 
+        adminPassword={adminPassword}
+        setAdminPassword={setAdminPassword}
+        contactEmail={content.contactEmail}
+      />
+    );
   }
 
   const handleSave = () => {
@@ -26,6 +37,7 @@ export const Dashboard = () => {
     updateGallery(gallery);
     updateHighlights(highlights);
     updateContent(content);
+    updateProjects(projects);
     alert('Changes saved successfully!');
   };
 
@@ -124,7 +136,7 @@ export const Dashboard = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'projects':
-        return <ProjectsTab />;
+        return <ProjectsTab projects={projects} setProjects={setProjects} />;
       
       case 'highlights':
         return (
@@ -383,6 +395,11 @@ export const Dashboard = () => {
                   onChange={(e) => handleFileUpload(e, 'resumeFile')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 />
+                {content.resumeFile && (
+                  <div className="mt-2">
+                    <span className="text-sm text-green-600">Resume uploaded successfully!</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -502,13 +519,13 @@ export const Dashboard = () => {
   };
 
   return (
-    <section id="dashboard" className="py-20 px-6 bg-gray-50 min-h-screen">
+    <section id="dashboard" className="py-20 px-6 bg-gray-50 min-h-screen overflow-hidden">
       <div className="container mx-auto max-w-6xl">
         <h2 className="text-3xl font-bold mb-8 text-center">Portfolio Dashboard</h2>
         
         <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 overflow-auto max-h-[70vh]">
           {renderContent()}
         </div>
         
