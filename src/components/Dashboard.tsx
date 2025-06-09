@@ -5,6 +5,7 @@ import { ProjectsTab } from './dashboard/ProjectsTab';
 import { usePortfolio } from '../contexts/PortfolioContext';
 
 export const Dashboard = () => {
+  const [showDashboard, setShowDashboard] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState('projects');
   const [adminPassword, setAdminPassword] = useState(
@@ -19,11 +20,28 @@ export const Dashboard = () => {
   const [content, setContent] = useState(portfolioData.content);
   const [projects, setProjects] = useState(portfolioData.projects);
 
+  // Don't render anything if dashboard is not requested
+  if (!showDashboard) {
+    return (
+      <section id="dashboard" className="py-20 px-6 bg-gray-50 min-h-screen">
+        <div className="container mx-auto max-w-6xl text-center">
+          <h2 className="text-3xl font-bold mb-8">Portfolio Management</h2>
+          <button
+            onClick={() => setShowDashboard(true)}
+            className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 font-semibold"
+          >
+            Access Dashboard
+          </button>
+        </div>
+      </section>
+    );
+  }
+
   if (!isLoggedIn) {
     return (
       <DashboardLogin 
         onLogin={() => setIsLoggedIn(true)} 
-        onClose={() => {}} 
+        onClose={() => setShowDashboard(false)} 
         adminPassword={adminPassword}
         setAdminPassword={setAdminPassword}
         contactEmail={content.contactEmail}
@@ -519,13 +537,24 @@ export const Dashboard = () => {
   };
 
   return (
-    <section id="dashboard" className="py-20 px-6 bg-gray-50 min-h-screen overflow-hidden">
+    <section id="dashboard" className="py-20 px-6 bg-gray-50 min-h-screen">
       <div className="container mx-auto max-w-6xl">
-        <h2 className="text-3xl font-bold mb-8 text-center">Portfolio Dashboard</h2>
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold">Portfolio Dashboard</h2>
+          <button
+            onClick={() => {
+              setIsLoggedIn(false);
+              setShowDashboard(false);
+            }}
+            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+          >
+            Logout
+          </button>
+        </div>
         
         <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         
-        <div className="bg-white rounded-lg shadow-lg p-6 overflow-auto max-h-[70vh]">
+        <div className="bg-white rounded-lg shadow-lg p-6">
           {renderContent()}
         </div>
         
