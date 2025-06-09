@@ -13,15 +13,14 @@ interface DashboardProps {
 export const Dashboard = ({ isOpen, onClose }: DashboardProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const { saveChanges } = usePortfolio();
+  const [adminPassword, setAdminPassword] = useState(() => {
+    return localStorage.getItem('adminPassword') || 'admin123';
+  });
+  const { saveChanges, portfolioData } = usePortfolio();
   const [notification, setNotification] = useState<string | null>(null);
 
-  const handleLogin = (password: string) => {
-    if (password === 'admin123') {
-      setIsLoggedIn(true);
-      return true;
-    }
-    return false;
+  const handleLogin = () => {
+    setIsLoggedIn(true);
   };
 
   const handleLogout = () => {
@@ -86,7 +85,13 @@ export const Dashboard = ({ isOpen, onClose }: DashboardProps) => {
               {/* Content */}
               <div className="p-6 h-full overflow-y-auto">
                 {!isLoggedIn ? (
-                  <DashboardLogin onLogin={handleLogin} />
+                  <DashboardLogin 
+                    onLogin={handleLogin}
+                    onClose={onClose}
+                    adminPassword={adminPassword}
+                    setAdminPassword={setAdminPassword}
+                    contactEmail={portfolioData.content.contactEmail}
+                  />
                 ) : (
                   <DashboardTabs />
                 )}

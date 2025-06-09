@@ -2,20 +2,30 @@
 import React, { useState } from 'react';
 import { ProjectsTab } from './ProjectsTab';
 import { EducationTab } from './EducationTab';
+import { usePortfolio } from '../../contexts/PortfolioContext';
 
 export const DashboardTabs = () => {
   const [activeTab, setActiveTab] = useState('projects');
+  const { portfolioData, updateProjects, updateEducation } = usePortfolio();
 
   const tabs = [
-    { id: 'projects', label: 'Projects', component: ProjectsTab },
-    { id: 'education', label: 'Education', component: EducationTab },
+    { 
+      id: 'projects', 
+      label: 'Projects', 
+      component: () => <ProjectsTab projects={portfolioData.projects} setProjects={updateProjects} />
+    },
+    { 
+      id: 'education', 
+      label: 'Education', 
+      component: () => <EducationTab education={portfolioData.education} setEducation={updateEducation} />
+    },
     { id: 'skills', label: 'Skills', component: () => <div className="p-4">Skills management coming soon...</div> },
     { id: 'experience', label: 'Experience', component: () => <div className="p-4">Experience management coming soon...</div> },
     { id: 'gallery', label: 'Gallery', component: () => <div className="p-4">Gallery management coming soon...</div> },
     { id: 'content', label: 'Content', component: () => <div className="p-4">Content management coming soon...</div> },
   ];
 
-  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || ProjectsTab;
+  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || (() => <ProjectsTab projects={portfolioData.projects} setProjects={updateProjects} />);
 
   return (
     <div className="h-full flex flex-col">
