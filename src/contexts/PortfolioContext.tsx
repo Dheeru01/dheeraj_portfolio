@@ -26,6 +26,14 @@ interface Experience {
   description: string;
 }
 
+interface Education {
+  id: number;
+  degree: string;
+  school: string;
+  period: string;
+  location: string;
+}
+
 interface GalleryItem {
   id: number;
   src: string;
@@ -61,6 +69,7 @@ interface PortfolioData {
   projects: Project[];
   skills: Skill[];
   experiences: Experience[];
+  education: Education[];
   gallery: GalleryItem[];
   highlights: Highlight[];
   content: Content;
@@ -71,6 +80,7 @@ interface PortfolioContextType {
   updateProjects: (projects: Project[]) => void;
   updateSkills: (skills: Skill[]) => void;
   updateExperiences: (experiences: Experience[]) => void;
+  updateEducation: (education: Education[]) => void;
   updateGallery: (gallery: GalleryItem[]) => void;
   updateHighlights: (highlights: Highlight[]) => void;
   updateContent: (content: Content) => void;
@@ -107,6 +117,22 @@ const defaultData: PortfolioData = {
   ],
   experiences: [
     { id: 1, title: 'Software Engineer Intern', company: 'Tech Corp', period: '2024 - Present', description: 'Working on React applications and backend services' }
+  ],
+  education: [
+    {
+      id: 1,
+      degree: "Master of Science in Computer Science",
+      school: "Stanford University", 
+      period: "2018 - 2020",
+      location: "Stanford, CA"
+    },
+    {
+      id: 2,
+      degree: "Bachelor of Technology in Computer Science",
+      school: "Indian Institute of Technology",
+      period: "2014 - 2018", 
+      location: "Mumbai, India"
+    }
   ],
   gallery: [
     {
@@ -181,6 +207,7 @@ const ensureDataStructure = (data: any): PortfolioData => {
     projects: Array.isArray(data?.projects) ? data.projects : defaultData.projects,
     skills: Array.isArray(data?.skills) ? data.skills : defaultData.skills,
     experiences: Array.isArray(data?.experiences) ? data.experiences : defaultData.experiences,
+    education: Array.isArray(data?.education) ? data.education : defaultData.education,
     gallery: Array.isArray(data?.gallery) ? data.gallery : defaultData.gallery,
     highlights: Array.isArray(data?.highlights) ? data.highlights : defaultData.highlights,
     content: {
@@ -244,6 +271,11 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
     setPortfolioData(prev => ({ ...prev, experiences }));
   };
 
+  const updateEducation = (education: Education[]) => {
+    console.log('Updating education:', education);
+    setPortfolioData(prev => ({ ...prev, education }));
+  };
+
   const updateGallery = (gallery: GalleryItem[]) => {
     console.log('Updating gallery:', gallery);
     setPortfolioData(prev => ({ ...prev, gallery }));
@@ -274,6 +306,7 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
       updateProjects,
       updateSkills,
       updateExperiences,
+      updateEducation,
       updateGallery,
       updateHighlights,
       updateContent,

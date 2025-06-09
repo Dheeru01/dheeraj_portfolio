@@ -1,29 +1,45 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import { ProjectsTab } from './ProjectsTab';
+import { EducationTab } from './EducationTab';
 
-interface DashboardTabsProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}
+export const DashboardTabs = () => {
+  const [activeTab, setActiveTab] = useState('projects');
 
-export const DashboardTabs = ({ activeTab, setActiveTab }: DashboardTabsProps) => {
-  const tabs = ['projects', 'highlights', 'skills', 'experience', 'gallery', 'technologies', 'profile', 'content'];
+  const tabs = [
+    { id: 'projects', label: 'Projects', component: ProjectsTab },
+    { id: 'education', label: 'Education', component: EducationTab },
+    { id: 'skills', label: 'Skills', component: () => <div className="p-4">Skills management coming soon...</div> },
+    { id: 'experience', label: 'Experience', component: () => <div className="p-4">Experience management coming soon...</div> },
+    { id: 'gallery', label: 'Gallery', component: () => <div className="p-4">Gallery management coming soon...</div> },
+    { id: 'content', label: 'Content', component: () => <div className="p-4">Content management coming soon...</div> },
+  ];
+
+  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || ProjectsTab;
 
   return (
-    <div className="flex space-x-4 mb-6 overflow-x-auto">
-      {tabs.map((tab) => (
-        <button
-          key={tab}
-          onClick={() => setActiveTab(tab)}
-          className={`px-4 py-2 rounded-lg capitalize transition-colors whitespace-nowrap ${
-            activeTab === tab
-              ? 'bg-black text-white'
-              : 'bg-gray-200 text-black hover:bg-gray-300'
-          }`}
-        >
-          {tab}
-        </button>
-      ))}
+    <div className="h-full flex flex-col">
+      {/* Tab Navigation */}
+      <div className="flex border-b border-gray-200 mb-6">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
+              activeTab === tab.id
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      <div className="flex-1 overflow-y-auto">
+        <ActiveComponent />
+      </div>
     </div>
   );
 };

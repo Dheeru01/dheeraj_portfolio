@@ -6,21 +6,7 @@ import { usePortfolio } from '../contexts/PortfolioContext';
 export const Resume = () => {
   const { portfolioData } = usePortfolio();
   
-  const education = [
-    {
-      degree: "Master of Science in Computer Science",
-      school: "Stanford University", 
-      period: "2018 - 2020",
-      location: "Stanford, CA"
-    },
-    {
-      degree: "Bachelor of Technology in Computer Science",
-      school: "Indian Institute of Technology",
-      period: "2014 - 2018", 
-      location: "Mumbai, India"
-    }
-  ];
-
+  const education = portfolioData.education || [];
   const experience = portfolioData.experiences || [];
 
   const handleDownloadResume = () => {
@@ -82,27 +68,34 @@ export const Resume = () => {
               Education
             </h3>
             
-            <div className="space-y-8">
-              {education.map((edu, index) => (
-                <div key={index} className="relative pl-8 border-l-2 border-gray-600">
-                  <div className="absolute -left-2 top-0 w-4 h-4 bg-gray-800 rounded-full"></div>
-                  <div className="bg-white rounded-lg p-6 border border-gray-400 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-2">{edu.degree}</h4>
-                    <h5 className="text-lg font-medium mb-3 text-black">{edu.school}</h5>
-                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-gray-700">
-                      <span className="flex items-center gap-1">
-                        <Calendar size={16} />
-                        {edu.period}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <MapPin size={16} />
-                        {edu.location}
-                      </span>
+            {education.length > 0 ? (
+              <div className="space-y-8">
+                {education.map((edu, index) => (
+                  <div key={edu.id} className="relative pl-8 border-l-2 border-gray-600">
+                    <div className="absolute -left-2 top-0 w-4 h-4 bg-gray-800 rounded-full"></div>
+                    <div className="bg-white rounded-lg p-6 border border-gray-400 shadow-sm">
+                      <h4 className="text-xl font-semibold text-gray-900 mb-2">{edu.degree}</h4>
+                      <h5 className="text-lg font-medium mb-3 text-black">{edu.school}</h5>
+                      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-gray-700">
+                        <span className="flex items-center gap-1">
+                          <Calendar size={16} />
+                          {edu.period}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin size={16} />
+                          {edu.location}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-white rounded-lg p-8 border border-gray-400 text-center shadow-sm">
+                <p className="text-gray-700 mb-4">No education history added yet.</p>
+                <p className="text-sm text-gray-600">Use the dashboard to add your educational background.</p>
+              </div>
+            )}
           </div>
 
           {/* Experience & Certifications */}
