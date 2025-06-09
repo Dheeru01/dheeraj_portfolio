@@ -11,11 +11,55 @@ export const Contact = () => {
     message: ''
   });
 
+  const MY_EMAIL = 'kanukuntladheeraj@gmail.com';
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const { name, email, message } = formData;
-    const mailtoUrl = `mailto:${portfolioData.content.contactEmail}?subject=Portfolio Contact from ${name}&body=Name: ${name}%0AEmail: ${email}%0A%0AMessage:%0A${message}`;
-    window.location.href = mailtoUrl;
+    
+    // Create a form element and submit to FormSubmit
+    const form = document.createElement('form');
+    form.action = `https://formsubmit.co/${MY_EMAIL}`;
+    form.method = 'POST';
+    form.target = '_blank';
+
+    // Add form data
+    const nameInput = document.createElement('input');
+    nameInput.type = 'hidden';
+    nameInput.name = 'name';
+    nameInput.value = formData.name;
+    form.appendChild(nameInput);
+
+    const emailInput = document.createElement('input');
+    emailInput.type = 'hidden';
+    emailInput.name = 'email';
+    emailInput.value = formData.email;
+    form.appendChild(emailInput);
+
+    const messageInput = document.createElement('input');
+    messageInput.type = 'hidden';
+    messageInput.name = 'message';
+    messageInput.value = formData.message;
+    form.appendChild(messageInput);
+
+    // Add FormSubmit configuration
+    const subjectInput = document.createElement('input');
+    subjectInput.type = 'hidden';
+    subjectInput.name = '_subject';
+    subjectInput.value = `Portfolio Contact from ${formData.name}`;
+    form.appendChild(subjectInput);
+
+    const nextInput = document.createElement('input');
+    nextInput.type = 'hidden';
+    nextInput.name = '_next';
+    nextInput.value = window.location.href;
+    form.appendChild(nextInput);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    // Reset form
+    setFormData({ name: '', email: '', message: '' });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -50,7 +94,7 @@ export const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-black">Email</h4>
-                  <p className="text-gray-700">{portfolioData.content.contactEmail}</p>
+                  <p className="text-gray-700">{MY_EMAIL}</p>
                 </div>
               </div>
               

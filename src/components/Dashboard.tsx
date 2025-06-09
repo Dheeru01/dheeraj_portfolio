@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DashboardLogin } from './dashboard/DashboardLogin';
 import { DashboardTabs } from './dashboard/DashboardTabs';
 import { ProjectsTab } from './dashboard/ProjectsTab';
+import { FloatingEditIcon } from './FloatingEditIcon';
 import { usePortfolio } from '../contexts/PortfolioContext';
 
 export const Dashboard = () => {
@@ -20,21 +21,9 @@ export const Dashboard = () => {
   const [content, setContent] = useState(portfolioData.content);
   const [projects, setProjects] = useState(portfolioData.projects);
 
-  // Don't render anything if dashboard is not requested
+  // Show floating edit icon when dashboard is not open
   if (!showDashboard) {
-    return (
-      <section id="dashboard" className="py-20 px-6 bg-gray-50 min-h-screen">
-        <div className="container mx-auto max-w-6xl text-center">
-          <h2 className="text-3xl font-bold mb-8">Portfolio Management</h2>
-          <button
-            onClick={() => setShowDashboard(true)}
-            className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 font-semibold"
-          >
-            Access Dashboard
-          </button>
-        </div>
-      </section>
-    );
+    return <FloatingEditIcon onDashboardOpen={() => setShowDashboard(true)} />;
   }
 
   if (!isLoggedIn) {
@@ -551,8 +540,8 @@ export const Dashboard = () => {
   };
 
   return (
-    <section id="dashboard" className="py-20 px-6 bg-gray-50 min-h-screen">
-      <div className="container mx-auto max-w-6xl">
+    <section id="dashboard" className="fixed inset-0 bg-gray-50 z-50 overflow-auto">
+      <div className="container mx-auto max-w-6xl p-6">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold">Portfolio Dashboard</h2>
           <button
