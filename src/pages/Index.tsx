@@ -9,13 +9,10 @@ import { Resume } from '../components/Resume';
 import { Contact } from '../components/Contact';
 import { Navigation } from '../components/Navigation';
 import { Dashboard } from '../components/Dashboard';
-import { FloatingEditIcon } from '../components/FloatingEditIcon';
 import { JotFormChatbot } from '../components/JotFormChatbot';
 import { PortfolioProvider } from '../contexts/PortfolioContext';
 
 const Index = () => {
-  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-
   return (
     <PortfolioProvider>
       <div className="bg-white text-black overflow-x-hidden">
@@ -27,11 +24,7 @@ const Index = () => {
         <Gallery />
         <Resume />
         <Contact />
-        <Dashboard 
-          isOpen={isDashboardOpen} 
-          onClose={() => setIsDashboardOpen(false)} 
-        />
-        <FloatingEditIcon onDashboardOpen={() => setIsDashboardOpen(true)} />
+        <Dashboard />
         <JotFormChatbot />
       </div>
     </PortfolioProvider>

@@ -1,55 +1,39 @@
 
-import React, { useState } from 'react';
-import { ProjectsTab } from './ProjectsTab';
-import { EducationTab } from './EducationTab';
-import { usePortfolio } from '../../contexts/PortfolioContext';
+import React from 'react';
 
-export const DashboardTabs = () => {
-  const [activeTab, setActiveTab] = useState('projects');
-  const { portfolioData, updateProjects, updateEducation } = usePortfolio();
+interface DashboardTabsProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
 
+export const DashboardTabs = ({ activeTab, setActiveTab }: DashboardTabsProps) => {
   const tabs = [
-    { 
-      id: 'projects', 
-      label: 'Projects', 
-      component: () => <ProjectsTab projects={portfolioData.projects} setProjects={updateProjects} />
-    },
-    { 
-      id: 'education', 
-      label: 'Education', 
-      component: () => <EducationTab />
-    },
-    { id: 'skills', label: 'Skills', component: () => <div className="p-4">Skills management coming soon...</div> },
-    { id: 'experience', label: 'Experience', component: () => <div className="p-4">Experience management coming soon...</div> },
-    { id: 'gallery', label: 'Gallery', component: () => <div className="p-4">Gallery management coming soon...</div> },
-    { id: 'content', label: 'Content', component: () => <div className="p-4">Content management coming soon...</div> },
+    { id: 'projects', label: 'Projects' },
+    { id: 'education', label: 'Education' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'experience', label: 'Experience' },
+    { id: 'gallery', label: 'Gallery' },
+    { id: 'highlights', label: 'Highlights' },
+    { id: 'technologies', label: 'Technologies' },
+    { id: 'profile', label: 'Profile' },
+    { id: 'content', label: 'Content' },
   ];
 
-  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || (() => <ProjectsTab projects={portfolioData.projects} setProjects={updateProjects} />);
-
   return (
-    <div className="h-full flex flex-col">
-      {/* Tab Navigation */}
-      <div className="flex border-b border-gray-200 mb-6">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
-              activeTab === tab.id
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab Content */}
-      <div className="flex-1 overflow-y-auto">
-        <ActiveComponent />
-      </div>
+    <div className="flex border-b border-gray-200 mb-6">
+      {tabs.map((tab) => (
+        <button
+          key={tab.id}
+          onClick={() => setActiveTab(tab.id)}
+          className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
+            activeTab === tab.id
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+          }`}
+        >
+          {tab.label}
+        </button>
+      ))}
     </div>
   );
 };
