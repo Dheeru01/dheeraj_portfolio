@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, Trash2, Star, Upload } from 'lucide-react';
+import { Plus, Trash2, Star } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -34,19 +34,6 @@ export const ProjectsTab = ({ projects, setProjects }: ProjectsTabProps) => {
   });
   
   const { toast } = useToast();
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageUrl = e.target?.result as string;
-        setNewProject({...newProject, image: imageUrl});
-        toast({ title: "Success", description: "Image uploaded successfully!" });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const addProject = () => {
     if (newProject.title && newProject.description) {
@@ -94,30 +81,12 @@ export const ProjectsTab = ({ projects, setProjects }: ProjectsTabProps) => {
             onChange={(e) => setNewProject({...newProject, tech: e.target.value})}
             className="bg-white text-black border-gray-300"
           />
-          
-          <div className="space-y-2">
-            <Label className="text-black">Project Image</Label>
-            <div className="flex items-center gap-4">
-              <label className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                <Upload size={16} className="text-gray-600" />
-                <span className="text-sm text-gray-600">Upload Image</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-              </label>
-              {newProject.image && (
-                <img 
-                  src={newProject.image} 
-                  alt="Preview" 
-                  className="w-16 h-16 object-cover rounded border border-gray-300"
-                />
-              )}
-            </div>
-          </div>
-
+          <Input
+            placeholder="Project Image URL"
+            value={newProject.image}
+            onChange={(e) => setNewProject({...newProject, image: e.target.value})}
+            className="bg-white text-black border-gray-300"
+          />
           <Input
             placeholder="GitHub URL"
             value={newProject.github}
@@ -170,13 +139,6 @@ export const ProjectsTab = ({ projects, setProjects }: ProjectsTabProps) => {
                 </button>
               </div>
             </div>
-            {project.image && (
-              <img 
-                src={project.image} 
-                alt={project.title} 
-                className="w-full h-24 object-cover rounded border border-gray-300 mb-2"
-              />
-            )}
             <p className="text-gray-600 text-sm mb-2">{project.description}</p>
             <p className="text-gray-800 text-xs">Tech: {project.tech}</p>
           </div>
