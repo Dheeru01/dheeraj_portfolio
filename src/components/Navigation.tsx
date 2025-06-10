@@ -26,7 +26,9 @@ export const Navigation = () => {
 
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-      scrolled ? 'bg-black/80 backdrop-blur-lg' : 'bg-transparent'
+      scrolled 
+        ? 'glass backdrop-blur-lg bg-black/10 border-b border-white/10' 
+        : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
@@ -40,7 +42,7 @@ export const Navigation = () => {
               <a
                 key={item.name}
                 href={item.href}
-                className="relative group text-white hover:text-blue-400 transition-colors duration-300"
+                className="relative group text-white hover:text-blue-400 transition-colors duration-300 backdrop-blur-sm"
               >
                 {item.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 group-hover:w-full transition-all duration-300"></span>
@@ -50,7 +52,7 @@ export const Navigation = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden"
+            className="md:hidden text-white backdrop-blur-sm"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -59,7 +61,7 @@ export const Navigation = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden mt-4 pb-4">
+          <div className="md:hidden mt-4 pb-4 glass backdrop-blur-lg bg-black/20 rounded-lg px-4 py-2">
             {navItems.map((item) => (
               <a
                 key={item.name}
