@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface Project {
@@ -48,6 +47,12 @@ interface Highlight {
   description: string;
 }
 
+interface SocialLink {
+  id: number;
+  name: string;
+  url: string;
+}
+
 interface Content {
   aboutText: string;
   contactEmail: string;
@@ -63,6 +68,7 @@ interface Content {
   githubUrl: string;
   linkedinUrl: string;
   twitterUrl: string;
+  socialLinks?: SocialLink[];
 }
 
 interface PortfolioData {
@@ -188,7 +194,8 @@ const defaultData: PortfolioData = {
     location: 'San Francisco, CA',
     githubUrl: 'https://github.com',
     linkedinUrl: 'https://linkedin.com',
-    twitterUrl: 'https://twitter.com'
+    twitterUrl: 'https://twitter.com',
+    socialLinks: []
   }
 };
 
@@ -224,7 +231,8 @@ const ensureDataStructure = (data: any): PortfolioData => {
       location: data?.content?.location || defaultData.content.location,
       githubUrl: data?.content?.githubUrl || defaultData.content.githubUrl,
       linkedinUrl: data?.content?.linkedinUrl || defaultData.content.linkedinUrl,
-      twitterUrl: data?.content?.twitterUrl || defaultData.content.twitterUrl
+      twitterUrl: data?.content?.twitterUrl || defaultData.content.twitterUrl,
+      socialLinks: Array.isArray(data?.content?.socialLinks) ? data.content.socialLinks : defaultData.content.socialLinks
     }
   };
 };

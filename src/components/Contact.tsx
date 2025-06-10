@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, ExternalLink } from 'lucide-react';
 import { usePortfolio } from '../contexts/PortfolioContext';
 
 export const Contact = () => {
@@ -69,6 +69,13 @@ export const Contact = () => {
     });
   };
 
+  const scrollToProjects = () => {
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="contact" className="py-20 px-6 bg-white">
       <div className="container mx-auto max-w-6xl">
@@ -122,7 +129,7 @@ export const Contact = () => {
             {/* Social Links */}
             <div>
               <h4 className="font-semibold mb-4 text-black">Follow Me</h4>
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-wrap">
                 <a
                   href={portfolioData.content.githubUrl}
                   target="_blank"
@@ -147,7 +154,40 @@ export const Contact = () => {
                 >
                   <Twitter size={20} className="text-black" />
                 </a>
+                
+                {/* Dynamic Social Links */}
+                {portfolioData.content.socialLinks && portfolioData.content.socialLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-300"
+                    title={link.name}
+                  >
+                    <ExternalLink size={20} className="text-black" />
+                  </a>
+                ))}
               </div>
+              
+              {/* Custom Social Links List */}
+              {portfolioData.content.socialLinks && portfolioData.content.socialLinks.length > 0 && (
+                <div className="mt-4 space-y-2">
+                  {portfolioData.content.socialLinks.map((link) => (
+                    <div key={link.id} className="flex items-center gap-2">
+                      <ExternalLink size={16} className="text-gray-600" />
+                      <a 
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-700 hover:text-black transition-colors"
+                      >
+                        {link.name}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           
@@ -213,6 +253,20 @@ export const Contact = () => {
           </div>
         </div>
       </div>
+      
+      {/* Make sure View My Work button scrolls to projects */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.scrollToProjects = function() {
+              const projectsSection = document.getElementById('projects');
+              if (projectsSection) {
+                projectsSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            };
+          `
+        }}
+      />
     </section>
   );
 };

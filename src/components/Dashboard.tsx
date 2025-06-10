@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Edit3, Save, EyeOff, Plus, Trash2, User, Upload } from 'lucide-react';
 import { Button } from './ui/button';
@@ -36,6 +37,7 @@ export const Dashboard = () => {
   const [newGalleryItem, setNewGalleryItem] = useState({ src: '', title: '', category: '' });
   const [newHighlight, setNewHighlight] = useState({ icon: '', title: '', description: '' });
   const [newTechnology, setNewTechnology] = useState('');
+  const [newSocialLink, setNewSocialLink] = useState({ name: '', url: '' });
 
   // Update local state when portfolio data changes
   useEffect(() => {
@@ -111,6 +113,22 @@ export const Dashboard = () => {
     }
   };
 
+  const handleCVUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const updatedContent = {...content, cvFile: reader.result as string};
+        setContent(updatedContent);
+        toast({
+          title: "Success",
+          description: "CV uploaded successfully! Don't forget to save changes.",
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const addProject = () => {
     if (newProject.title && newProject.description) {
       const updatedProjects = [...projects, { ...newProject, id: Date.now() }];
@@ -165,6 +183,18 @@ export const Dashboard = () => {
     }
   };
 
+  const addSocialLink = () => {
+    if (newSocialLink.name && newSocialLink.url) {
+      const updatedContent = {
+        ...content, 
+        socialLinks: [...(content.socialLinks || []), { ...newSocialLink, id: Date.now() }]
+      };
+      setContent(updatedContent);
+      setNewSocialLink({ name: '', url: '' });
+      toast({ title: "Success", description: "Social link added successfully! Don't forget to save changes." });
+    }
+  };
+
   const removeProject = (id: number) => {
     const updatedProjects = projects.filter(p => p.id !== id);
     setProjects(updatedProjects);
@@ -201,6 +231,15 @@ export const Dashboard = () => {
     toast({ title: "Deleted", description: "Technology removed successfully! Don't forget to save changes." });
   };
 
+  const removeSocialLink = (id: number) => {
+    const updatedContent = {
+      ...content, 
+      socialLinks: (content.socialLinks || []).filter(link => link.id !== id)
+    };
+    setContent(updatedContent);
+    toast({ title: "Deleted", description: "Social link removed successfully! Don't forget to save changes." });
+  };
+
   const toggleProjectFeatured = (id: number) => {
     const updatedProjects = projects.map(p => p.id === id ? {...p, featured: !p.featured} : p);
     setProjects(updatedProjects);
@@ -233,8 +272,8 @@ export const Dashboard = () => {
   // Main dashboard
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg p-6 w-full max-w-6xl h-[90vh] border border-gray-300 flex flex-col">
-        <div className="flex justify-between items-center mb-6">
+      <div className="bg-white rounded-lg p-6 w-full max-w-6xl h-[90vh] border border-gray-300 flex flex-col overflow-hidden">
+        <div className="flex justify-between items-center mb-6 flex-shrink-0">
           <h2 className="text-2xl font-bold text-black">Portfolio Dashboard</h2>
           <div className="flex gap-2">
             <Button onClick={handleLogout} variant="outline" size="sm">
@@ -249,16 +288,12 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        <div className="flex-shrink-0">
+          <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        </div>
 
         <div className="flex-1 overflow-hidden">
-          <div 
-            className="h-full overflow-y-auto pr-2"
-            style={{ 
-              scrollbarWidth: 'none', 
-              msOverflowStyle: 'none'
-            }}
-          >
+          <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
             
             {activeTab === 'projects' && (
               <ProjectsTab projects={projects} setProjects={setProjects} />
@@ -450,25 +485,48 @@ export const Dashboard = () => {
                 </div>
 
                 <div className="bg-gray-100 p-6 rounded-lg border border-gray-300">
-                  <h4 className="text-lg font-medium text-black mb-4">Resume Upload</h4>
-                  <div className="flex items-center gap-6">
-                    <div className="flex-1">
-                      <input
-                        type="file"
-                        accept=".pdf,.doc,.docx"
-                        onChange={handleResumeUpload}
-                        className="hidden"
-                        id="resumeInput"
-                      />
-                      <Label htmlFor="resumeInput" className="cursor-pointer">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white transition-colors">
-                          <Upload size={16} />
-                          Upload Resume
-                        </div>
-                      </Label>
-                      {content.resumeFile && (
-                        <p className="text-green-600 text-sm mt-2">✓ Resume uploaded successfully</p>
-                      )}
+                  <h4 className="text-lg font-medium text-black mb-4">Resume & CV Upload</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-6">
+                      <div className="flex-1">
+                        <input
+                          type="file"
+                          accept=".pdf,.doc,.docx"
+                          onChange={handleResumeUpload}
+                          className="hidden"
+                          id="resumeInput"
+                        />
+                        <Label htmlFor="resumeInput" className="cursor-pointer">
+                          <div className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-gray-800 rounded-lg text-white transition-colors">
+                            <Upload size={16} />
+                            Upload Resume
+                          </div>
+                        </Label>
+                        {content.resumeFile && (
+                          <p className="text-green-600 text-sm mt-2">✓ Resume uploaded successfully</p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-6">
+                      <div className="flex-1">
+                        <input
+                          type="file"
+                          accept=".pdf,.doc,.docx"
+                          onChange={handleCVUpload}
+                          className="hidden"
+                          id="cvInput"
+                        />
+                        <Label htmlFor="cvInput" className="cursor-pointer">
+                          <div className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white transition-colors">
+                            <Upload size={16} />
+                            Upload CV
+                          </div>
+                        </Label>
+                        {content.cvFile && (
+                          <p className="text-green-600 text-sm mt-2">✓ CV uploaded successfully</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -671,7 +729,7 @@ export const Dashboard = () => {
 
                   <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
                     <Label className="text-black text-lg block mb-3">Social Media Links</Label>
-                    <div className="space-y-3">
+                    <div className="space-y-3 mb-4">
                       <Input
                         placeholder="GitHub URL"
                         value={content.githubUrl}
@@ -691,6 +749,48 @@ export const Dashboard = () => {
                         className="bg-white text-black border-gray-300"
                       />
                     </div>
+                    
+                    <div className="border-t border-gray-300 pt-4">
+                      <h4 className="text-lg font-medium text-black mb-4">Add Custom Social Links</h4>
+                      <div className="space-y-3 mb-4">
+                        <Input
+                          placeholder="Platform Name (e.g., Instagram, YouTube)"
+                          value={newSocialLink.name}
+                          onChange={(e) => setNewSocialLink({...newSocialLink, name: e.target.value})}
+                          className="bg-white text-black border-gray-300"
+                        />
+                        <Input
+                          placeholder="URL"
+                          value={newSocialLink.url}
+                          onChange={(e) => setNewSocialLink({...newSocialLink, url: e.target.value})}
+                          className="bg-white text-black border-gray-300"
+                        />
+                        <Button onClick={addSocialLink} className="bg-black hover:bg-gray-800 text-white">
+                          <Plus size={16} className="mr-2" />
+                          Add Social Link
+                        </Button>
+                      </div>
+                      
+                      {content.socialLinks && content.socialLinks.length > 0 && (
+                        <div className="space-y-2">
+                          <h5 className="font-medium text-black">Custom Social Links:</h5>
+                          {content.socialLinks.map((link) => (
+                            <div key={link.id} className="flex justify-between items-center bg-white p-3 rounded border border-gray-300">
+                              <div>
+                                <span className="font-medium text-black">{link.name}</span>
+                                <span className="text-gray-600 text-sm block">{link.url}</span>
+                              </div>
+                              <button
+                                onClick={() => removeSocialLink(link.id)}
+                                className="text-red-600 hover:text-red-800"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -699,13 +799,34 @@ export const Dashboard = () => {
         </div>
 
         {/* Save Button */}
-        <div className="mt-6 pt-6 border-t border-gray-300">
+        <div className="mt-6 pt-6 border-t border-gray-300 flex-shrink-0">
           <Button onClick={handleSaveChanges} className="bg-black hover:bg-gray-800 text-white">
             <Save size={20} className="mr-2" />
             Save Changes
           </Button>
         </div>
       </div>
+      
+      <style jsx>{`
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #cbd5e0 #f7fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f7fafc;
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e0;
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #a0aec0;
+        }
+      `}</style>
     </div>
   );
 };
