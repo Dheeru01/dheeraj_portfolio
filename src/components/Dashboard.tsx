@@ -293,7 +293,13 @@ export const Dashboard = () => {
         </div>
 
         <div className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto pr-2 custom-scrollbar">
+          <div 
+            className="h-full overflow-y-auto pr-2"
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#cbd5e0 #f7fafc'
+            }}
+          >
             
             {activeTab === 'projects' && (
               <ProjectsTab projects={projects} setProjects={setProjects} />
@@ -807,7 +813,7 @@ export const Dashboard = () => {
         </div>
       </div>
       
-      <style jsx>{`
+      <style>{`
         .custom-scrollbar {
           scrollbar-width: thin;
           scrollbar-color: #cbd5e0 #f7fafc;
