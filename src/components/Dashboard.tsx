@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Edit3, Save, EyeOff, Plus, Trash2, User, Upload } from 'lucide-react';
 import { Button } from './ui/button';
@@ -257,8 +256,7 @@ export const Dashboard = () => {
             className="h-full overflow-y-auto pr-2"
             style={{ 
               scrollbarWidth: 'none', 
-              msOverflowStyle: 'none',
-              WebkitScrollbar: { display: 'none' }
+              msOverflowStyle: 'none'
             }}
           >
             
