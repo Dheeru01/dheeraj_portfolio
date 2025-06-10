@@ -253,12 +253,14 @@ export const Dashboard = () => {
         <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
         <div className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto pr-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            <style jsx>{`
-              div::-webkit-scrollbar {
-                display: none;
-              }
-            `}</style>
+          <div 
+            className="h-full overflow-y-auto pr-2"
+            style={{ 
+              scrollbarWidth: 'none', 
+              msOverflowStyle: 'none',
+              WebkitScrollbar: { display: 'none' }
+            }}
+          >
             
             {activeTab === 'projects' && (
               <ProjectsTab projects={projects} setProjects={setProjects} />
