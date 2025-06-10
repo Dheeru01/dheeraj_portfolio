@@ -13,6 +13,7 @@ export const DashboardTabs = ({ activeTab, setActiveTab }: DashboardTabsProps) =
     { id: 'experience', label: 'Experience' },
     { id: 'gallery', label: 'Gallery' },
     { id: 'highlights', label: 'Highlights' },
+    { id: 'certifications', label: 'Certifications' },
     { id: 'technologies', label: 'Technologies' },
     { id: 'profile', label: 'Profile' },
     { id: 'content', label: 'Content' },

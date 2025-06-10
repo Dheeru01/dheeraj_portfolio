@@ -81,6 +81,13 @@ export const Hero = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const scrollToProjects = () => {
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <canvas
@@ -134,12 +141,12 @@ export const Hero = () => {
           Full Stack Developer • AI/ML Enthusiast • Innovation Driver
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in animation-delay-600">
-          <button className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white font-semibold hover:scale-105 transition-transform duration-300">
+        <div className="flex justify-center animate-fade-in animation-delay-600">
+          <button 
+            onClick={scrollToProjects}
+            className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white font-semibold hover:scale-105 transition-transform duration-300"
+          >
             View My Work
-          </button>
-          <button className="px-8 py-3 border border-white/30 rounded-full text-white font-semibold hover:bg-white/10 transition-colors duration-300">
-            Download Resume
           </button>
         </div>
       </div>

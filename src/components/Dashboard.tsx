@@ -16,7 +16,7 @@ export const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('projects');
   
   const { toast } = useToast();
-  const { portfolioData, updateProjects, updateSkills, updateExperiences, updateGallery, updateHighlights, updateContent, saveChanges } = usePortfolio();
+  const { portfolioData, updateProjects, updateSkills, updateExperiences, updateGallery, updateHighlights, updateCertifications, updateContent, saveChanges } = usePortfolio();
 
   // Store password in localStorage for persistence
   const [adminPassword, setAdminPassword] = useState(() => {
@@ -29,6 +29,7 @@ export const Dashboard = () => {
   const [experiences, setExperiences] = useState(portfolioData.experiences);
   const [gallery, setGallery] = useState(portfolioData.gallery);
   const [highlights, setHighlights] = useState(portfolioData.highlights);
+  const [certifications, setCertifications] = useState(portfolioData.certifications);
   const [content, setContent] = useState(portfolioData.content);
 
   const [newProject, setNewProject] = useState({ title: '', description: '', tech: '', image: '', github: '', live: '', featured: false });
@@ -36,6 +37,7 @@ export const Dashboard = () => {
   const [newExperience, setNewExperience] = useState({ title: '', company: '', period: '', description: '' });
   const [newGalleryItem, setNewGalleryItem] = useState({ src: '', title: '', category: '' });
   const [newHighlight, setNewHighlight] = useState({ icon: '', title: '', description: '' });
+  const [newCertification, setNewCertification] = useState({ name: '', issuer: '', date: '', description: '' });
   const [newTechnology, setNewTechnology] = useState('');
   const [newSocialLink, setNewSocialLink] = useState({ name: '', url: '' });
 
@@ -47,6 +49,7 @@ export const Dashboard = () => {
     setExperiences(portfolioData.experiences);
     setGallery(portfolioData.gallery);
     setHighlights(portfolioData.highlights);
+    setCertifications(portfolioData.certifications);
     setContent(portfolioData.content);
   }, [portfolioData]);
 
@@ -62,6 +65,7 @@ export const Dashboard = () => {
     updateExperiences(experiences);
     updateGallery(gallery);
     updateHighlights(highlights);
+    updateCertifications(certifications);
     updateContent(content);
     
     setTimeout(() => {
@@ -174,6 +178,15 @@ export const Dashboard = () => {
     }
   };
 
+  const addCertification = () => {
+    if (newCertification.name) {
+      const updatedCertifications = [...certifications, { ...newCertification, id: Date.now() }];
+      setCertifications(updatedCertifications);
+      setNewCertification({ name: '', issuer: '', date: '', description: '' });
+      toast({ title: "Success", description: "Certification added successfully! Don't forget to save changes." });
+    }
+  };
+
   const addTechnology = () => {
     if (newTechnology && !content.technologies.includes(newTechnology)) {
       const updatedContent = {...content, technologies: [...content.technologies, newTechnology]};
@@ -223,6 +236,12 @@ export const Dashboard = () => {
     const updatedGallery = gallery.filter(g => g.id !== id);
     setGallery(updatedGallery);
     toast({ title: "Deleted", description: "Gallery item removed successfully! Don't forget to save changes." });
+  };
+
+  const removeCertification = (id: number) => {
+    const updatedCertifications = certifications.filter(c => c.id !== id);
+    setCertifications(updatedCertifications);
+    toast({ title: "Deleted", description: "Certification removed successfully! Don't forget to save changes." });
   };
 
   const removeTechnology = (tech: string) => {
@@ -403,6 +422,67 @@ export const Dashboard = () => {
                       </div>
                       <button
                         onClick={() => removeGalleryItem(item.id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Certifications Tab */}
+            {activeTab === 'certifications' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-black">Manage Certifications</h3>
+                
+                <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+                  <h4 className="text-lg font-medium text-black mb-4">Add New Certification</h4>
+                  <div className="space-y-3">
+                    <Input
+                      placeholder="Certification Name"
+                      value={newCertification.name}
+                      onChange={(e) => setNewCertification({...newCertification, name: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <Input
+                      placeholder="Issuing Organization (optional)"
+                      value={newCertification.issuer}
+                      onChange={(e) => setNewCertification({...newCertification, issuer: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <Input
+                      placeholder="Date (optional)"
+                      value={newCertification.date}
+                      onChange={(e) => setNewCertification({...newCertification, date: e.target.value})}
+                      className="bg-white text-black border-gray-300"
+                    />
+                    <textarea
+                      placeholder="Description (optional)"
+                      value={newCertification.description}
+                      onChange={(e) => setNewCertification({...newCertification, description: e.target.value})}
+                      className="w-full p-3 bg-white text-black rounded-lg border border-gray-300"
+                      rows={3}
+                    />
+                    <Button onClick={addCertification} className="bg-black hover:bg-gray-800 text-white">
+                      <Plus size={16} className="mr-2" />
+                      Add Certification
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {certifications.map((cert) => (
+                    <div key={cert.id} className="bg-gray-100 p-4 rounded-lg flex justify-between items-start border border-gray-300">
+                      <div>
+                        <h5 className="text-black font-medium">{cert.name}</h5>
+                        {cert.issuer && <p className="text-gray-600">{cert.issuer}</p>}
+                        {cert.date && <p className="text-gray-500 text-sm">{cert.date}</p>}
+                        {cert.description && <p className="text-gray-700 text-sm mt-2">{cert.description}</p>}
+                      </div>
+                      <button
+                        onClick={() => removeCertification(cert.id)}
                         className="text-red-600 hover:text-red-800"
                       >
                         <Trash2 size={16} />

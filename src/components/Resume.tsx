@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { Download, Calendar, MapPin, GraduationCap, Briefcase } from 'lucide-react';
+import { Download, Calendar, MapPin, GraduationCap, Briefcase, Award } from 'lucide-react';
 import { usePortfolio } from '../contexts/PortfolioContext';
 
 export const Resume = () => {
   const { portfolioData } = usePortfolio();
   
   const experience = portfolioData.experiences || [];
+  const certifications = portfolioData.certifications || [];
 
   const handleDownloadResume = () => {
     if (portfolioData.content.resumeFile) {
@@ -94,6 +95,7 @@ export const Resume = () => {
                       Sircilla, TS
                     </span>
                   </div>
+                  <p className="text-gray-800 mt-2">Percentage: 95.4% | 2019-2021</p>
                 </div>
               </div>
 
@@ -107,6 +109,7 @@ export const Resume = () => {
                       Hanamkonda, TS
                     </span>
                   </div>
+                  <p className="text-gray-800 mt-2">Percentage: 80.4% | 2019</p>
                 </div>
               </div>
             </div>
@@ -151,22 +154,30 @@ export const Resume = () => {
             {/* Certifications */}
             <div>
               <h3 className="text-2xl font-bold mb-8 flex items-center gap-2 text-black">
-                <GraduationCap size={24} className="text-gray-800" />
+                <Award size={24} className="text-gray-800" />
                 Certifications
               </h3>
               
               <div className="space-y-3">
-                {[
-                  "AWS Certified Solutions Architect",
-                  "Google Cloud Professional Developer", 
-                  "MongoDB Certified Developer",
-                  "Kubernetes Application Developer"
-                ].map((cert, index) => (
+                {certifications.map((cert) => (
                   <div
-                    key={index}
+                    key={cert.id}
                     className="bg-white rounded-lg p-4 border border-gray-400 hover:bg-gray-50 transition-colors duration-300 shadow-sm"
                   >
-                    <span className="text-gray-800 font-medium">{cert}</span>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="text-gray-800 font-medium block">{cert.name}</span>
+                        {cert.issuer && (
+                          <span className="text-gray-600 text-sm">{cert.issuer}</span>
+                        )}
+                      </div>
+                      {cert.date && (
+                        <span className="text-gray-500 text-sm">{cert.date}</span>
+                      )}
+                    </div>
+                    {cert.description && (
+                      <p className="text-gray-600 text-sm mt-2">{cert.description}</p>
+                    )}
                   </div>
                 ))}
               </div>

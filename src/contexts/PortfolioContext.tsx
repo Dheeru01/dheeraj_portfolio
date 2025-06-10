@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface Project {
@@ -53,6 +54,14 @@ interface SocialLink {
   url: string;
 }
 
+interface Certification {
+  id: number;
+  name: string;
+  issuer?: string;
+  date?: string;
+  description?: string;
+}
+
 interface Content {
   aboutText: string;
   contactEmail: string;
@@ -78,6 +87,7 @@ interface PortfolioData {
   education: Education[];
   gallery: GalleryItem[];
   highlights: Highlight[];
+  certifications: Certification[];
   content: Content;
 }
 
@@ -89,6 +99,7 @@ interface PortfolioContextType {
   updateEducation: (education: Education[]) => void;
   updateGallery: (gallery: GalleryItem[]) => void;
   updateHighlights: (highlights: Highlight[]) => void;
+  updateCertifications: (certifications: Certification[]) => void;
   updateContent: (content: Content) => void;
   saveChanges: () => void;
 }
@@ -180,6 +191,12 @@ const defaultData: PortfolioData = {
       description: "Multiple hackathon wins and project accolades"
     }
   ],
+  certifications: [
+    { id: 1, name: "AWS Certified Solutions Architect", issuer: "Amazon Web Services", date: "2023" },
+    { id: 2, name: "Google Cloud Professional Developer", issuer: "Google", date: "2023" },
+    { id: 3, name: "MongoDB Certified Developer", issuer: "MongoDB", date: "2022" },
+    { id: 4, name: "Kubernetes Application Developer", issuer: "CNCF", date: "2022" }
+  ],
   content: {
     aboutText: 'Passionate software developer with expertise in modern web technologies...',
     contactEmail: 'kanukuntladheeraj@gmail.com',
@@ -217,6 +234,7 @@ const ensureDataStructure = (data: any): PortfolioData => {
     education: Array.isArray(data?.education) ? data.education : defaultData.education,
     gallery: Array.isArray(data?.gallery) ? data.gallery : defaultData.gallery,
     highlights: Array.isArray(data?.highlights) ? data.highlights : defaultData.highlights,
+    certifications: Array.isArray(data?.certifications) ? data.certifications : defaultData.certifications,
     content: {
       aboutText: data?.content?.aboutText || defaultData.content.aboutText,
       contactEmail: data?.content?.contactEmail || defaultData.content.contactEmail,
@@ -294,6 +312,11 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
     setPortfolioData(prev => ({ ...prev, highlights }));
   };
 
+  const updateCertifications = (certifications: Certification[]) => {
+    console.log('Updating certifications:', certifications);
+    setPortfolioData(prev => ({ ...prev, certifications }));
+  };
+
   const updateContent = (content: Content) => {
     console.log('Updating content:', content);
     setPortfolioData(prev => ({ ...prev, content }));
@@ -317,6 +340,7 @@ export const PortfolioProvider = ({ children }: { children: ReactNode }) => {
       updateEducation,
       updateGallery,
       updateHighlights,
+      updateCertifications,
       updateContent,
       saveChanges
     }}>
