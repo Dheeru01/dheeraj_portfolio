@@ -31,17 +31,17 @@ export const About = () => {
             </p>
             <div className="flex gap-4">
               <div className="text-center">
-                /*<div className="text-3xl font-bold text-black">{portfolioData.content.projectsCompleted}+</div>*/
+                {/*<div className="text-3xl font-bold text-black">{portfolioData.content.projectsCompleted}+</div>*/}
                 <div className="text-3xl font-bold text-black">5+</div>
                 <div className="text-sm text-gray-600">Projects Completed</div>
               </div>
               <div className="text-center">
-                /*<div className="text-3xl font-bold text-black">{portfolioData.content.yearsExperience}+</div>*/
+                {/*<div className="text-3xl font-bold text-black">{portfolioData.content.yearsExperience}+</div>*/}
                 <div className="text-3xl font-bold text-black">2+</div>
                 <div className="text-sm text-gray-600">Years Experience</div>
               </div>
               <div className="text-center">
-                /*<div className="text-3xl font-bold text-black">{portfolioData.content.technologiesCount}+</div>*/
+                {/*<div className="text-3xl font-bold text-black">{portfolioData.content.technologiesCount}+</div>*/}
                 <div className="text-3xl font-bold text-black">15+</div>
                 <div className="text-sm text-gray-600">Technologies</div>
               </div>
@@ -85,7 +85,7 @@ export const About = () => {
               <p className="text-gray-700">{item.description}</p>
             </div>
           ))}*/}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+          
           {/* Full Stack Development */}
           <div className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group">
             <div className="text-black mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -122,7 +122,6 @@ export const About = () => {
             <p className="text-gray-700">Multiple hackathon wins and project accolades</p>
           </div>
         </div>
-      </div>
     </section>
   );
 };
