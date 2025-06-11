@@ -18,9 +18,9 @@ export const About = () => {
         
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div className="space-y-6">
-            /* <p className="text-lg text-gray-800 leading-relaxed">
+            {/* <p className="text-lg text-gray-800 leading-relaxed">
               {portfolioData.content.aboutText}
-            </p> */
+            </p> */}
             <p className="text-lg text-gray-800 leading-relaxed">
               Passionate software developer with expertise in modern web technologies and GenAitools...
             </p>
@@ -49,7 +49,7 @@ export const About = () => {
           </div>
           
           <div className="relative">
-            /*<div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center overflow-hidden border-4 border-black">
+            {/*<div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center overflow-hidden border-4 border-black">
               {portfolioData.content.profileImage ? (
                 <img 
                   src={portfolioData.content.profileImage} 
@@ -62,10 +62,9 @@ export const About = () => {
                 </div>
               )}
             </div>
-          </div>*/
+          </div>*/}
           <div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center overflow-hidden border-4 border-black">
-              {portfolioData.content.profileImage ? (
-                <img 
+               <img 
                   src={me_img}
                   alt="Profile" 
                   className="w-full h-full object-cover"
@@ -74,7 +73,7 @@ export const About = () => {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          /*{portfolioData.highlights.map((item, index) => (
+          {/*{portfolioData.highlights.map((item, index) => (
             <div
               key={index}
               className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group"
@@ -85,7 +84,7 @@ export const About = () => {
               <h3 className="text-xl font-semibold mb-2 text-black">{item.title}</h3>
               <p className="text-gray-700">{item.description}</p>
             </div>
-          ))}*/
+          ))}*/}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
           {/* Full Stack Development */}
           <div className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group">
