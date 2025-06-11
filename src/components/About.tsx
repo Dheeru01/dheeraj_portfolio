@@ -2,6 +2,7 @@
 import React from 'react';
 import { Code, Lightbulb, Users, Award } from 'lucide-react';
 import { usePortfolio } from '../contexts/PortfolioContext';
+import me_img from './me.jpg'
 
 export const About = () => {
   const { portfolioData } = usePortfolio();
@@ -65,7 +66,7 @@ export const About = () => {
           <div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center overflow-hidden border-4 border-black">
               {portfolioData.content.profileImage ? (
                 <img 
-                  src={portfolioData.content.profileImage} 
+                  src=me_img 
                   alt="Profile" 
                   className="w-full h-full object-cover"
                 />
