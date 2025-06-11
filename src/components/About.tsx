@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Code, Lightbulb, Users, Award } from 'lucide-react';
 import { usePortfolio } from '../contexts/PortfolioContext';
@@ -13,8 +12,6 @@ export const About = () => {
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 text-black">
           About <span className="bg-gradient-to-r from-gray-600 to-black bg-clip-text text-transparent">Me</span>
         </h2>
-        
-        
         
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div className="space-y-6">
@@ -64,11 +61,11 @@ export const About = () => {
             </div>
           </div>*/}
           <div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center overflow-hidden border-4 border-black">
-               <img 
-                  src={me_img}
-                  alt="Profile" 
-                  className="w-full h-full object-cover"
-                />
+            <img 
+              src={me_img}
+              alt="Profile" 
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
         
@@ -122,7 +119,7 @@ export const About = () => {
             <p className="text-gray-700">Multiple hackathon wins and project accolades</p>
           </div>
         </div>
-        </div>
+      </div> {/* <-- This was missing */}
     </section>
   );
 };
