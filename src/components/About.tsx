@@ -122,6 +122,7 @@ export const About = () => {
             <p className="text-gray-700">Multiple hackathon wins and project accolades</p>
           </div>
         </div>
+        </div>
     </section>
   );
 };
