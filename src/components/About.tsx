@@ -17,8 +17,11 @@ export const About = () => {
         
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div className="space-y-6">
-            <p className="text-lg text-gray-800 leading-relaxed">
+            /* <p className="text-lg text-gray-800 leading-relaxed">
               {portfolioData.content.aboutText}
+            </p> */
+            <p className="text-lg text-gray-800 leading-relaxed">
+              Passionate software developer with expertise in modern web technologies and GenAitools...
             </p>
             <p className="text-lg text-gray-800 leading-relaxed">
               My journey in technology has been driven by curiosity and a constant desire to learn. 
@@ -27,22 +30,25 @@ export const About = () => {
             </p>
             <div className="flex gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-black">{portfolioData.content.projectsCompleted}+</div>
+                /*<div className="text-3xl font-bold text-black">{portfolioData.content.projectsCompleted}+</div>*/
+                <div className="text-3xl font-bold text-black">5+</div>
                 <div className="text-sm text-gray-600">Projects Completed</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-black">{portfolioData.content.yearsExperience}+</div>
+                /*<div className="text-3xl font-bold text-black">{portfolioData.content.yearsExperience}+</div>*/
+                <div className="text-3xl font-bold text-black">2+</div>
                 <div className="text-sm text-gray-600">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-black">{portfolioData.content.technologiesCount}+</div>
+                /*<div className="text-3xl font-bold text-black">{portfolioData.content.technologiesCount}+</div>*/
+                <div className="text-3xl font-bold text-black">15+</div>
                 <div className="text-sm text-gray-600">Technologies</div>
               </div>
             </div>
           </div>
           
           <div className="relative">
-            <div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center overflow-hidden border-4 border-black">
+            /*<div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center overflow-hidden border-4 border-black">
               {portfolioData.content.profileImage ? (
                 <img 
                   src={portfolioData.content.profileImage} 
@@ -55,6 +61,14 @@ export const About = () => {
                 </div>
               )}
             </div>
+          </div>*/
+          <div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center overflow-hidden border-4 border-black">
+              {portfolioData.content.profileImage ? (
+                <img 
+                  src={portfolioData.content.profileImage} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover"
+                />
           </div>
         </div>
         
