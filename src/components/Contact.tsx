@@ -132,8 +132,8 @@ export const Contact = () => {
             <div>
               <h4 className="font-semibold mb-4 text-black">Follow Me</h4>
               <div className="flex gap-4 flex-wrap">
+                {/*href={portfolioData.content.githubUrl}*/}
                 <a
-                  {/*href={portfolioData.content.githubUrl}*/}
                   href = "https://github.com/Dheeru01"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -142,7 +142,6 @@ export const Contact = () => {
                   <Github size={20} className="text-black" />
                 </a>
                 <a
-                  {/*href={portfolioData.content.linkedinUrl}*/}
                   href = "https://www.linkedin.com/in/dheeraj-kanukuntla-62a108208"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -152,7 +151,6 @@ export const Contact = () => {
                 </a>
               
                 <a
-                  {/*href={portfolioData.content.leetcodeUrl}*/}
                   href = "https://leetcode.com/Dheeru01"
                   target="_blank"
                   rel="noopener noreferrer"
