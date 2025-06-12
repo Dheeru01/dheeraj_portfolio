@@ -133,7 +133,7 @@ export const Contact = () => {
               <h4 className="font-semibold mb-4 text-black">Follow Me</h4>
               <div className="flex gap-4 flex-wrap">
                 <a
-                  {*/href={portfolioData.content.githubUrl}*/}
+                  {/*href={portfolioData.content.githubUrl}*/}
                   href = "https://github.com/Dheeru01"
                   target="_blank"
                   rel="noopener noreferrer"
