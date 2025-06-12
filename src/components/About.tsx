@@ -106,20 +106,20 @@ export const About = () => {
               className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group"
             >
               <div className="text-black mb-4 group-hover:scale-110 transition-transform duration-300">
-                <div className="w-8 h-8" >{"</>"}</div>
+                <div className="w-8 h-8" >👥</div>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-black">Full Stack Development</h3>
-              <p className="text-gray-700">Expertise in modern web technologies and frameworks</p>
+              <h3 className="text-xl font-semibold mb-2 text-black">Team Leadership</h3>
+              <p className="text-gray-700">Leading teams to deliver exceptional results</p>
             </div>
 
             <div
               className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group"
             >
               <div className="text-black mb-4 group-hover:scale-110 transition-transform duration-300">
-                <div className="w-8 h-8" >{"</>"}</div>
+                <div className="w-8 h-8" >🏅</div>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-black">Full Stack Development</h3>
-              <p className="text-gray-700">Expertise in modern web technologies and frameworks</p>
+              <h3 className="text-xl font-semibold mb-2 text-black">Recognition</h3>
+              <p className="text-gray-700">Multiple Hackathons particiated and certified</p>
             </div>
         </div>
       </div>
