@@ -70,7 +70,7 @@ export const About = () => {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {portfolioData.highlights.map((item, index) => (
+          {/*{portfolioData.highlights.map((item, index) => (
             <div
               key={index}
               className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group"
@@ -81,7 +81,46 @@ export const About = () => {
               <h3 className="text-xl font-semibold mb-2 text-black">{item.title}</h3>
               <p className="text-gray-700">{item.description}</p>
             </div>
-          ))}
+          ))}*/}
+            <div
+              className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group"
+            >
+              <div className="text-black mb-4 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-8 h-8" >{"</>"}</div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-black">Full Stack Development</h3>
+              <p className="text-gray-700">Expertise in modern web technologies and frameworks</p>
+            </div>
+
+            <div
+              className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group"
+            >
+              <div className="text-black mb-4 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-8 h-8" >🚀</div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-black">Innovation</h3>
+              <p className="text-gray-700">Always exploring cutting-edge technologies and solutions</p>
+            </div>
+
+            <div
+              className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group"
+            >
+              <div className="text-black mb-4 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-8 h-8" >{"</>"}</div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-black">Full Stack Development</h3>
+              <p className="text-gray-700">Expertise in modern web technologies and frameworks</p>
+            </div>
+
+            <div
+              className="bg-gray-100 backdrop-blur-lg rounded-lg p-6 border border-gray-300 hover:bg-gray-200 transition-all duration-300 group"
+            >
+              <div className="text-black mb-4 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-8 h-8" >{"</>"}</div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-black">Full Stack Development</h3>
+              <p className="text-gray-700">Expertise in modern web technologies and frameworks</p>
+            </div>
         </div>
       </div>
     </section>
