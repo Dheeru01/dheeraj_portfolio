@@ -18,9 +18,9 @@ export const Resume = () => {
       link.click();
       document.body.removeChild(link);
     //} 
-    else {
-      alert('Resume file not uploaded yet');
-    }
+    //else {
+      //alert('Resume file not uploaded yet');
+   // }
   };
 
   const handleDownloadCV = () => {
