@@ -6,7 +6,8 @@ import { usePortfolio } from '../contexts/PortfolioContext';
 export const Resume = () => {
   const { portfolioData } = usePortfolio();
   
-  const experience = portfolioData.experiences || [];
+  //const experience = portfolioData.experiences || [];
+  const experience = [];
   const certifications = portfolioData.certifications || [];
 
   const handleDownloadResume = () => {
