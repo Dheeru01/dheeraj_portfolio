@@ -31,7 +31,15 @@ export const Skills = () => {
   }, []);
 
   // Safe access to nested properties with fallbacks
-  const skills = portfolioData?.skills || [];
+  //const skills = portfolioData?.skills || [];
+  const skills = [
+  { id: 1, name: 'Web Development', level: 92 },
+  { id: 2, name: 'Computer Networks', level: 80 },
+  { id: 3, name: 'Database Management System (DBMS)', level: 80 },
+  { id: 4, name: 'OOPS Concepts', level: 85 },
+  { id: 5, name: 'Data Structures & Algorithms', level: 85 }
+];
+
   const content = portfolioData?.content;
   const technologies = content?.technologies || [];
 
