@@ -10,15 +10,16 @@ export const Resume = () => {
   const certifications = portfolioData.certifications || [];
 
   const handleDownloadResume = () => {
-    if (portfolioData.content.resumeFile) {
+    //if (portfolioData.content.resumeFile) {
       const link = document.createElement('a');
-      link.href = portfolioData.content.resumeFile;
+      link.href = "https://pdf.ac/2CZaDa";
       link.download = 'Dheeraj_Kanukuntla_Resume.pdf';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    } else {
-      alert('Resume file not uploaded yet. Please use the dashboard to upload your resume.');
+    //} 
+    else {
+      alert('Resume file not uploaded yet');
     }
   };
 
@@ -31,7 +32,7 @@ export const Resume = () => {
       link.click();
       document.body.removeChild(link);
     } else {
-      alert('CV file not uploaded yet. Please use the dashboard to upload your CV.');
+      alert('CV file not uploaded yet');
     }
   };
 
