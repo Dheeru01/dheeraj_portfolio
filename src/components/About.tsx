@@ -43,7 +43,7 @@ export const About = () => {
           
           <div className="relative">
             <div className="w-80 h-80 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center overflow-hidden border-4 border-black">
-              {*/{portfolioData.content.profileImage ? (
+              {/*{portfolioData.content.profileImage ? (
                 <img 
                   src={portfolioData.content.profileImage} 
                   alt="Profile" 
