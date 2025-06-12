@@ -107,6 +107,9 @@ export const Resume = () => {
                     <span className="flex items-center gap-1">
                       <Calendar size={16} />
                       2022-2026
+                    
+                    <MapPin size={16} />
+                      Hyderabad, TS
                     </span>
                   </div>
                   <p className="text-gray-800 mt-2">CGPA: 8.54/10</p>
@@ -120,11 +123,14 @@ export const Resume = () => {
                   <h5 className="text-lg font-medium mb-3 text-black">Sai Sri Junior College</h5>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-gray-700">
                     <span className="flex items-center gap-1">
+                      <Calendar size={16} />
+                      2019-2021
+                   
                       <MapPin size={16} />
                       Sircilla, TS
                     </span>
                   </div>
-                  <p className="text-gray-800 mt-2">Percentage: 95.4% | 2019-2021</p>
+                  <p className="text-gray-800 mt-2">Percentage: 95.4% </p>
                 </div>
               </div>
 
@@ -134,11 +140,14 @@ export const Resume = () => {
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">Board Of Secondary Education</h4>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-gray-700">
                     <span className="flex items-center gap-1">
+                      <Calendar size={16} />
+                      2019
+                    
                       <MapPin size={16} />
                       Hanamkonda, TS
                     </span>
                   </div>
-                  <p className="text-gray-800 mt-2">Percentage: 80.4% | 2019</p>
+                  <p className="text-gray-800 mt-2">Percentage: 80.4% </p>
                 </div>
               </div>
             </div>
