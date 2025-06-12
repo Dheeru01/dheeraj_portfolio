@@ -40,8 +40,29 @@ export const Skills = () => {
   { id: 5, name: 'Data Structures & Algorithms', level: 85 }
 ];
 
-  const content = portfolioData?.content;
-  const technologies = content?.technologies || [];
+  //const content = portfolioData?.content;
+  //const technologies = content?.technologies || [];
+  const technologies = [
+  'React',
+  'Node.js',
+  'Express',
+  'Python',
+  'MongoDB',
+  'MySQL',
+  'AWS',
+  'Git',
+  'Redux js',
+  'Java',
+  'Firebase',
+  'TypeScript',
+  'Chakra UI',
+  'Material UI',
+  'Razor Pay',
+  'GenAI',
+  'Postman',
+  'Mailtrap'
+];
+
 
   return (
     <section id="skills" className="py-20 px-6 relative bg-white">
