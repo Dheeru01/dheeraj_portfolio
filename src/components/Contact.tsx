@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, ExternalLink } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, ExternalLink ,SquareCode} from 'lucide-react';
 import { usePortfolio } from '../contexts/PortfolioContext';
 
 export const Contact = () => {
@@ -111,7 +111,8 @@ export const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-black">Phone</h4>
-                  <p className="text-gray-700">{portfolioData.content.contactPhone}</p>
+                  {/*<p className="text-gray-700">{portfolioData.content.contactPhone}</p>*/}
+                  <p className="text-gray-700">+91 9182810929</p>
                 </div>
               </div>
               
@@ -121,7 +122,8 @@ export const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-black">Location</h4>
-                  <p className="text-gray-700">{portfolioData.content.location}</p>
+                  {/*<p className="text-gray-700">{portfolioData.content.location}</p>*/}
+                  <p className="text-gray-700">Hyderabad , India</p>
                 </div>
               </div>
             </div>
@@ -131,7 +133,8 @@ export const Contact = () => {
               <h4 className="font-semibold mb-4 text-black">Follow Me</h4>
               <div className="flex gap-4 flex-wrap">
                 <a
-                  href={portfolioData.content.githubUrl}
+                  {*/href={portfolioData.content.githubUrl}*/}
+                  href = "https://github.com/Dheeru01"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-300"
@@ -139,20 +142,23 @@ export const Contact = () => {
                   <Github size={20} className="text-black" />
                 </a>
                 <a
-                  href={portfolioData.content.linkedinUrl}
+                  {/*href={portfolioData.content.linkedinUrl}*/}
+                  href = "https://www.linkedin.com/in/dheeraj-kanukuntla-62a108208"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-300"
                 >
                   <Linkedin size={20} className="text-black" />
                 </a>
+              
                 <a
-                  href={portfolioData.content.twitterUrl}
+                  {/*href={portfolioData.content.leetcodeUrl}*/}
+                  href = "https://leetcode.com/Dheeru01"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors duration-300"
                 >
-                  <Twitter size={20} className="text-black" />
+                  <SquareCode size={20} className="text-black" />
                 </a>
                 
                 {/* Dynamic Social Links */}
