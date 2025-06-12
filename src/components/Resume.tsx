@@ -8,7 +8,34 @@ export const Resume = () => {
   
   //const experience = portfolioData.experiences || [];
   const experience = [];
-  const certifications = portfolioData.certifications || [];
+  //const certifications = portfolioData.certifications || [];
+  const certifications = [
+  {
+    id: 1,
+    name: "Certificate of Training on Web Development",
+    issuer: "Internshala",
+    date: "16 Dec 2023"
+  },
+  {
+    id: 2,
+    name: "Certificate of Participation at CBIT Hackathon SUDHEE",
+    issuer: "CBIT",
+    date: "24 Feb 2024"
+  },
+  {
+    id: 3,
+    name: "Certificate of Completion of AI-ML Virtual Internship",
+    issuer: "AICTE-EDUSKILLS",
+    date: "Sep 2024"
+  },
+  {
+    id: 4,
+    name: "Deloitte Australia Technology Job Simulation",
+    issuer: "Forage",
+    date: "31 Dec 2024"
+  }
+];
+
 
   const handleDownloadResume = () => {
     //if (portfolioData.content.resumeFile) {
