@@ -5,8 +5,29 @@ import { usePortfolio } from '../contexts/PortfolioContext';
 
 export const Projects = () => {
   const { portfolioData } = usePortfolio();
-  const { projects } = portfolioData;
-
+  //const { projects } = portfolioData;
+  const projects= [
+    { 
+      id: 1, 
+      title: 'Course Bundler', 
+      description: 'A responsive e-learning platform where students can access video lectures and learning resources. Implemented secure user authentication, role-based access for students and teachers, and video playlist management. Integrated Razorpay for payments and used Redux Toolkit for efficient state management. Focused on clean UI (Chakra UI) and robust backend architecture (Express + MongoDB)', 
+      tech: 'ReactJS, Chakra UI, NodeJS, ExpressJS, MongoDB, Redux Toolkit, Razorpay',
+      image: 'https://tse3.mm.bing.net/th/id/OIP.ESG0VzWTe6b7tIzBLHDG-AHaEX?rs=1&pid=ImgDetMain',
+      github: 'https://github.com/Dheeru01/Course-Bundler-server',
+      live: 'https://course-bundler-omega.vercel.app/',
+      featured: true
+    },
+    { 
+      id: 2, 
+      title: 'Community Engagement – Community Safety Web Platform', 
+      description: 'A full-stack web app to boost community safety through real-time incident reporting, alerts, chats, and a help desk. Integrated Firebase and MongoDB for efficient data handling, Razorpay for secure payments, and Cloudinary/Nodemailer for media and email services. Built an intuitive UI with ReactJS, Chakra UI, and ChartJS, and managed state seamlessly with Redux Toolkit.', 
+      tech: 'ReactJS, Chakra UI, NodeJS, ExpressJS, MongoDB, Firebase, Razorpay, Redux Toolkit',
+      image: 'https://www.ceo-review.com/wp-content/uploads/2021/05/The-power-of-community-engagement.jpg',
+      //github: 'https://github.com',
+      //live: 'https://example.com',
+      featured: true
+    }
+  ]
   const featuredProjects = projects.filter(p => p.featured);
   const otherProjects = projects.filter(p => !p.featured);
 
