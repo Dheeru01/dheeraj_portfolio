@@ -12,7 +12,7 @@ export const Resume = () => {
   const handleDownloadResume = () => {
     //if (portfolioData.content.resumeFile) {
       const link = document.createElement('a');
-      link.href = "https://pdf.ac/2CZaDa";
+      link.href = "/Resume_Dheeraj.pdf";
       link.download = 'Dheeraj_Kanukuntla_Resume.pdf';
       document.body.appendChild(link);
       link.click();
